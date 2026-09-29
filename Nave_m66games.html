@@ -1,0 +1,3233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no,
+viewport-fit=cover">
+
+<meta name="theme-color" content="#000000">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style"
+content="black-translucent">
+
+<meta name="apple-mobile-web-app-title"
+content="MAEL66">
+
+<link rel="icon"
+type="image/png"
+sizes="512x512"
+href="icon.png">
+
+<link rel="apple-touch-icon"
+sizes="512x512"
+href="icon.png">
+
+<title>mael66_games_br</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    touch-action:none;
+}
+
+#game{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    background:#000;
+}
+
+/* =================================================
+   HUD
+================================================== */
+
+#hud{
+    position:fixed;
+    top:max(10px,env(safe-area-inset-top));
+    left:10px;
+    right:130px;
+    z-index:15;
+    display:flex;
+    justify-content:space-between;
+    color:#39ff14;
+    font-size:17px;
+    font-weight:900;
+    text-shadow:
+        0 0 5px #39ff14,
+        0 0 12px #39ff14;
+    pointer-events:none;
+}
+
+#shipPower{
+    position:fixed;
+    top:38px;
+    left:10px;
+    z-index:15;
+    color:#fff;
+    font-size:12px;
+    font-weight:900;
+    text-shadow:0 0 6px #39ff14;
+    pointer-events:none;
+}
+
+/* =================================================
+   BOTÕES SUPERIORES
+================================================== */
+
+#pauseBtn,
+#fullscreenBtn{
+    position:fixed;
+    top:max(10px,env(safe-area-inset-top));
+    z-index:30;
+    width:52px;
+    height:52px;
+    border:2px solid #39ff14;
+    border-radius:14px;
+    background:rgba(0,0,0,.75);
+    color:#39ff14;
+    font-size:24px;
+    font-weight:900;
+    box-shadow:
+        0 0 10px #39ff14,
+        inset 0 0 8px rgba(57,255,20,.15);
+}
+
+#pauseBtn{
+    right:70px;
+}
+
+#fullscreenBtn{
+    right:10px;
+    font-size:28px;
+}
+
+#pauseBtn:active,
+#fullscreenBtn:active{
+    transform:scale(.9);
+    background:rgba(57,255,20,.25);
+}
+
+/* =================================================
+   CONTROLES
+================================================== */
+
+.controls{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:max(
+        12px,
+        env(safe-area-inset-bottom)
+    );
+    z-index:20;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    padding:
+        10px
+        max(15px,env(safe-area-inset-right))
+        10px
+        max(15px,env(safe-area-inset-left));
+    pointer-events:none;
+}
+
+.move-controls{
+    width:175px;
+    height:155px;
+    position:relative;
+    pointer-events:auto;
+}
+
+.control-btn{
+    border:2px solid #39ff14;
+    background:rgba(0,0,0,.82);
+    color:#39ff14;
+    font-size:25px;
+    font-weight:900;
+    user-select:none;
+    -webkit-user-select:none;
+    touch-action:none;
+    box-shadow:
+        0 0 10px rgba(57,255,20,.65),
+        inset 0 0 10px rgba(57,255,20,.08);
+}
+
+.control-btn:active{
+    transform:scale(.90);
+    background:rgba(57,255,20,.30);
+}
+
+#up,
+#down,
+#left,
+#right{
+    position:absolute;
+    width:62px;
+    height:62px;
+    border-radius:17px;
+}
+
+#up{
+    left:56px;
+    top:0;
+}
+
+#down{
+    left:56px;
+    bottom:0;
+}
+
+#left{
+    left:0;
+    top:46px;
+}
+
+#right{
+    right:0;
+    top:46px;
+}
+
+.shoot-btn{
+    width:92px;
+    height:72px;
+    border-radius:18px;
+    font-size:16px;
+    line-height:20px;
+    pointer-events:auto;
+    background:rgba(57,255,20,.15);
+}
+
+/* =================================================
+   MENSAGEM
+================================================== */
+
+#message{
+    position:fixed;
+    top:28%;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:25;
+    color:#fff;
+    font-size:22px;
+    font-weight:900;
+    text-align:center;
+    text-shadow:
+        0 0 8px #39ff14,
+        0 0 18px #39ff14;
+    pointer-events:none;
+    opacity:0;
+    white-space:nowrap;
+}
+
+.message-show{
+    animation:messageAnim 1s forwards;
+}
+
+@keyframes messageAnim{
+
+    0%{
+        opacity:0;
+        transform:
+            translate(-50%,20px)
+            scale(.7);
+    }
+
+    25%{
+        opacity:1;
+        transform:
+            translate(-50%,0)
+            scale(1);
+    }
+
+    75%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:0;
+        transform:
+            translate(-50%,-30px);
+    }
+
+}
+
+/* =================================================
+   LOADING
+================================================== */
+
+#loading{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    background:#000;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.loading-title{
+    color:#39ff14;
+    font-size:27px;
+    font-weight:900;
+    margin-bottom:20px;
+    text-align:center;
+    text-shadow:
+        0 0 8px #39ff14,
+        0 0 20px #39ff14;
+}
+
+.loading-ship{
+    width:min(70vw,280px);
+    height:min(70vw,280px);
+    object-fit:contain;
+    margin-bottom:25px;
+    filter:
+        drop-shadow(0 0 10px #39ff14)
+        drop-shadow(0 0 25px #39ff14);
+    animation:pulse 1.2s infinite alternate;
+}
+
+@keyframes pulse{
+
+    from{
+        transform:scale(.95);
+    }
+
+    to{
+        transform:scale(1.05);
+    }
+
+}
+
+.loading-bar{
+    width:min(85vw,350px);
+    height:18px;
+    border:2px solid #39ff14;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 0 12px #39ff14;
+}
+
+#loadingProgress{
+    width:0%;
+    height:100%;
+    background:#39ff14;
+    box-shadow:
+        0 0 10px #39ff14,
+        0 0 20px #39ff14;
+    transition:width .15s;
+}
+
+#loadingText{
+    margin-top:12px;
+    color:#fff;
+    font-size:14px;
+    font-weight:bold;
+}
+
+/* =================================================
+   MENU
+================================================== */
+
+#mainMenu{
+    position:fixed;
+    inset:0;
+    z-index:80;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,80,0,.25),
+            #000 75%
+        );
+}
+
+.menu-box{
+    width:min(92vw,400px);
+    padding:22px;
+    border:2px solid #39ff14;
+    border-radius:22px;
+    background:rgba(0,0,0,.88);
+    box-shadow:
+        0 0 15px #39ff14,
+        inset 0 0 20px rgba(57,255,20,.1);
+    text-align:center;
+}
+
+#menuShip{
+    width:min(60vw,220px);
+    height:min(60vw,220px);
+    object-fit:contain;
+    display:block;
+    margin:auto;
+    filter:
+        drop-shadow(0 0 10px #39ff14)
+        drop-shadow(0 0 25px #39ff14);
+}
+
+.menu-title{
+    margin-top:8px;
+    color:#39ff14;
+    font-size:35px;
+    font-weight:900;
+    letter-spacing:3px;
+    text-shadow:
+        0 0 8px #39ff14,
+        0 0 20px #39ff14;
+}
+
+.menu-subtitle{
+    color:#fff;
+    font-size:19px;
+    font-weight:900;
+    margin-bottom:20px;
+}
+
+.menu-button{
+    width:100%;
+    min-height:55px;
+    margin-top:10px;
+    border:2px solid #39ff14;
+    border-radius:14px;
+    background:#071007;
+    color:#39ff14;
+    font-size:18px;
+    font-weight:900;
+    box-shadow:0 0 10px rgba(57,255,20,.5);
+}
+
+.menu-button:active{
+    transform:scale(.96);
+}
+
+.menu-info{
+    margin-top:18px;
+    color:#aaa;
+    font-size:12px;
+    line-height:18px;
+}
+
+/* =================================================
+   CONTA
+================================================== */
+
+#accountScreen{
+    position:fixed;
+    inset:0;
+    z-index:90;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    background:#000;
+}
+
+.account-box{
+    width:min(92vw,380px);
+    padding:25px;
+    border:2px solid #39ff14;
+    border-radius:20px;
+    background:#050505;
+    box-shadow:0 0 20px #39ff14;
+    text-align:center;
+}
+
+.account-title{
+    color:#39ff14;
+    font-size:28px;
+    font-weight:900;
+    margin-bottom:20px;
+}
+
+.account-input{
+    width:100%;
+    height:50px;
+    margin-top:10px;
+    padding:0 15px;
+    border:2px solid #39ff14;
+    border-radius:12px;
+    outline:none;
+    background:#000;
+    color:#fff;
+    font-size:16px;
+}
+
+.account-button{
+    width:100%;
+    height:52px;
+    margin-top:12px;
+    border:2px solid #39ff14;
+    border-radius:12px;
+    background:#071007;
+    color:#39ff14;
+    font-size:17px;
+    font-weight:900;
+}
+
+.account-button:active{
+    transform:scale(.96);
+}
+
+.account-msg{
+    min-height:22px;
+    margin-top:12px;
+    color:#fff;
+    font-size:13px;
+}
+
+/* =================================================
+   PAUSE
+================================================== */
+
+#pauseScreen{
+    position:fixed;
+    inset:0;
+    z-index:70;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    background:rgba(0,0,0,.82);
+    backdrop-filter:blur(5px);
+    padding:20px;
+}
+
+.pause-box{
+    width:min(90vw,380px);
+    padding:25px;
+    border:2px solid #39ff14;
+    border-radius:22px;
+    background:#000;
+    box-shadow:0 0 20px #39ff14;
+    text-align:center;
+}
+
+.pause-title{
+    color:#39ff14;
+    font-size:34px;
+    font-weight:900;
+    text-shadow:0 0 12px #39ff14;
+    margin-bottom:12px;
+}
+
+.pause-info{
+    color:#fff;
+    line-height:24px;
+    margin-bottom:15px;
+}
+
+.pause-button{
+    width:100%;
+    height:55px;
+    margin-top:10px;
+    border:2px solid #39ff14;
+    border-radius:14px;
+    background:#071007;
+    color:#39ff14;
+    font-size:18px;
+    font-weight:900;
+}
+
+/* =================================================
+   ROTAÇÃO
+================================================== */
+
+#rotate{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:200;
+    background:#000;
+    color:#39ff14;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    font-size:20px;
+    font-weight:900;
+    padding:30px;
+}
+
+@media (orientation:portrait){
+
+    #rotate{
+        display:flex;
+    }
+
+}
+
+/* =================================================
+   CELULAR PEQUENO
+================================================== */
+
+@media(max-height:500px){
+
+    #up,
+    #down,
+    #left,
+    #right{
+        width:55px;
+        height:55px;
+    }
+
+    .move-controls{
+        width:155px;
+        height:135px;
+    }
+
+    #up,
+    #down{
+        left:50px;
+    }
+
+    #left{
+        top:40px;
+    }
+
+    #right{
+        top:40px;
+    }
+
+    .shoot-btn{
+        width:82px;
+        height:62px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<canvas id="game"></canvas>
+
+<div id="hud">
+
+    <div id="level">
+        NÍVEL: 1
+    </div>
+
+    <div id="score">
+        PONTOS: 0
+    </div>
+
+</div>
+
+<div id="shipPower">
+    TIRO: 1 • NAVE PRINCIPAL
+</div>
+
+<button id="pauseBtn" style="display:none;">
+    Ⅱ
+</button>
+
+<button id="fullscreenBtn">
+    ⛶
+</button>
+
+<div id="message"></div>
+
+<div class="controls" style="display:none;">
+
+    <div class="move-controls">
+
+        <button class="control-btn" id="up">
+            ▲
+        </button>
+
+        <button class="control-btn" id="down">
+            ▼
+        </button>
+
+        <button class="control-btn" id="left">
+            ◀
+        </button>
+
+        <button class="control-btn" id="right">
+            ▶
+        </button>
+
+    </div>
+
+    <button class="control-btn shoot-btn" id="shoot">
+
+        🔫<br>
+        ATIRAR
+
+    </button>
+
+</div>
+
+<!-- =================================================
+     LOADING
+================================================== -->
+
+<div id="loading">
+
+    <div class="loading-title">
+        mael66_games_br
+    </div>
+
+    <img
+        id="loadingShip"
+        class="loading-ship"
+        src="https://i.imgur.com/mzMkam5.png"
+        alt="Navinha MAEL66">
+
+    <div class="loading-bar">
+
+        <div id="loadingProgress"></div>
+
+    </div>
+
+    <div id="loadingText">
+        CARREGANDO JOGO...
+    </div>
+
+</div>
+
+<!-- =================================================
+     MENU
+================================================== -->
+
+<div id="mainMenu">
+
+    <div class="menu-box">
+
+        <img
+            id="menuShip"
+            src="https://i.imgur.com/mzMkam5.png"
+            alt="MAEL66 NAVINHA">
+
+        <div class="menu-title">
+            MAEL66
+        </div>
+
+        <div class="menu-subtitle">
+            🚀 NAVINHA GAME
+        </div>
+
+        <button
+            class="menu-button"
+            id="playBtn">
+
+            ▶️ JOGAR
+
+        </button>
+
+        <button
+            class="menu-button"
+            id="accountBtn">
+
+            👤 REGISTRAR / ENTRAR
+
+        </button>
+
+        <button
+            class="menu-button"
+            id="menuFullscreenBtn">
+
+            ⛶ TELA CHEIA
+
+        </button>
+
+        <div class="menu-info">
+
+            DESTRUA OS INIMIGOS<br>
+            E SOBREVIVA AOS ASTEROIDES
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =================================================
+     CONTA
+================================================== -->
+
+<div id="accountScreen">
+
+    <div class="account-box">
+
+        <div class="account-title">
+            👤 MAEL66
+        </div>
+
+        <input
+            class="account-input"
+            id="accountName"
+            type="text"
+            maxlength="20"
+            placeholder="Nome do jogador">
+
+        <input
+            class="account-input"
+            id="accountPassword"
+            type="password"
+            maxlength="30"
+            placeholder="Senha">
+
+        <button
+            class="account-button"
+            id="registerBtn">
+
+            📝 REGISTRAR
+
+        </button>
+
+        <button
+            class="account-button"
+            id="loginBtn">
+
+            🔐 ENTRAR
+
+        </button>
+
+        <button
+            class="account-button"
+            id="backMenuBtn">
+
+            ◀ VOLTAR
+
+        </button>
+
+        <div
+            class="account-msg"
+            id="accountMsg">
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =================================================
+     PAUSE
+================================================== -->
+
+<div id="pauseScreen">
+
+    <div class="pause-box">
+
+        <div class="pause-title">
+            ⏸ PAUSADO
+        </div>
+
+        <div
+            class="pause-info"
+            id="pauseInfo">
+        </div>
+
+        <button
+            class="pause-button"
+            id="resumeBtn">
+
+            ▶️ CONTINUAR
+
+        </button>
+
+        <button
+            class="pause-button"
+            id="pauseMenuBtn">
+
+            🏠 MENU PRINCIPAL
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- =================================================
+     ROTAÇÃO
+================================================== -->
+
+<div id="rotate">
+
+    📱 VIRE O CELULAR PARA<br><br>
+
+    JOGAR NA HORIZONTAL
+
+</div>
+
+
+<script>
+
+/* =================================================
+   IMAGENS
+================================================== */
+
+/*
+   NAVE PRINCIPAL
+*/
+
+const MAIN_SHIP_URL =
+    "https://i.imgur.com/mzMkam5.png";
+
+
+/*
+   NOVO CENÁRIO DO JOGO
+*/
+
+const GAME_SCENE_URL =
+    "https://i.imgur.com/kVCsWme.png";
+
+
+/*
+   IMAGEM DA NAVE
+*/
+
+const playerImage =
+    new Image();
+
+playerImage.src =
+    MAIN_SHIP_URL;
+
+
+/*
+   IMAGEM DO CENÁRIO
+*/
+
+const sceneImage =
+    new Image();
+
+sceneImage.crossOrigin =
+    "anonymous";
+
+sceneImage.src =
+    GAME_SCENE_URL;
+
+
+/* =================================================
+   IMAGENS DO MENU E LOADING
+================================================== */
+
+document.getElementById(
+    "loadingShip"
+).src =
+    MAIN_SHIP_URL;
+
+document.getElementById(
+    "menuShip"
+).src =
+    MAIN_SHIP_URL;
+
+
+/* =================================================
+   CANVAS
+================================================== */
+
+const canvas =
+    document.getElementById("game");
+
+const ctx =
+    canvas.getContext("2d");
+
+let W,H;
+
+function resize(){
+
+    W =
+        canvas.width =
+        window.innerWidth;
+
+    H =
+        canvas.height =
+        window.innerHeight;
+
+}
+
+window.addEventListener(
+    "resize",
+    resize
+);
+
+resize();
+
+
+/* =================================================
+   VARIÁVEIS
+================================================== */
+
+let player;
+
+let bullets=[];
+
+let enemies=[];
+
+let asteroids=[];
+
+let stars=[];
+
+let explosions=[];
+
+let score=0;
+
+let level=1;
+
+let enemySpeed=1.7;
+
+let gameStarted=false;
+
+let paused=false;
+
+let animationId=null;
+
+
+/* =================================================
+   PODER DO TIRO
+================================================== */
+
+function shotPower(){
+
+    return Math.min(
+        1+(level-1)*2,
+        20
+    );
+
+}
+
+
+/* =================================================
+   PADRÃO DOS TIROS
+================================================== */
+
+function shotPattern(){
+
+    if(level===1){
+
+        return[
+            {
+                d:0,
+                s:10,
+                z:1
+            }
+        ];
+
+    }
+
+    if(level===2){
+
+        return[
+
+            {
+                d:-14,
+                s:11,
+                z:1
+            },
+
+            {
+                d:14,
+                s:11,
+                z:1
+            }
+
+        ];
+
+    }
+
+    if(level===3){
+
+        return[
+
+            {
+                d:-20,
+                s:12,
+                z:1
+            },
+
+            {
+                d:0,
+                s:13,
+                z:1
+            },
+
+            {
+                d:20,
+                s:12,
+                z:1
+            }
+
+        ];
+
+    }
+
+    if(level===4){
+
+        return[
+
+            {
+                d:-24,
+                s:12,
+                z:1
+            },
+
+            {
+                d:-8,
+                s:13,
+                z:1
+            },
+
+            {
+                d:8,
+                s:13,
+                z:1
+            },
+
+            {
+                d:24,
+                s:12,
+                z:1
+            }
+
+        ];
+
+    }
+
+    const gap =
+        level>=7 ? 22 : 16;
+
+    const count=5;
+
+    const z =
+        level>=6 ? 2 : 1.2;
+
+    return Array.from(
+        {
+            length:count
+        },
+        (_,i)=>({
+
+            d:
+                (i-(count-1)/2)
+                *gap,
+
+            s:
+                14+
+                Math.min(level,8),
+
+            z
+
+        })
+    );
+
+}
+
+
+/* =================================================
+   PROGRESSÃO
+================================================== */
+
+function updateProgression(){
+
+    document.getElementById(
+        "level"
+    ).textContent =
+        "NÍVEL: "+level;
+
+    document.getElementById(
+        "shipPower"
+    ).textContent =
+        "TIRO: "+
+        shotPower()+
+        " • NAVE PRINCIPAL";
+
+    document.getElementById(
+        "menuShip"
+    ).src =
+        MAIN_SHIP_URL;
+
+}
+
+
+/* =================================================
+   CONTROLES
+================================================== */
+
+const keys={
+
+    left:false,
+    right:false,
+    up:false,
+    down:false
+
+};
+
+
+/* =================================================
+   AUDIO
+================================================== */
+
+let audioCtx=null;
+
+function startAudio(){
+
+    try{
+
+        if(!audioCtx){
+
+            audioCtx =
+                new(
+                    window.AudioContext ||
+                    window.webkitAudioContext
+                )();
+
+        }
+
+        if(
+            audioCtx.state ===
+            "suspended"
+        ){
+
+            audioCtx.resume();
+
+        }
+
+    }catch(e){}
+
+}
+
+
+function beep(
+    frequency=500,
+    duration=.08
+){
+
+    if(!audioCtx)
+        return;
+
+    try{
+
+        const osc =
+            audioCtx.createOscillator();
+
+        const gain =
+            audioCtx.createGain();
+
+        osc.type="square";
+
+        osc.frequency.value =
+            frequency;
+
+        gain.gain.value=.04;
+
+        osc.connect(gain);
+
+        gain.connect(
+            audioCtx.destination
+        );
+
+        osc.start();
+
+        gain.gain.exponentialRampToValueAtTime(
+
+            .001,
+
+            audioCtx.currentTime+
+            duration
+
+        );
+
+        osc.stop(
+
+            audioCtx.currentTime+
+            duration
+
+        );
+
+    }catch(e){}
+
+}
+
+
+/* =================================================
+   ESTRELAS
+================================================== */
+
+function createStars(){
+
+    stars=[];
+
+    for(
+        let i=0;
+        i<100;
+        i++
+    ){
+
+        stars.push({
+
+            x:
+                Math.random()*W,
+
+            y:
+                Math.random()*H,
+
+            size:
+                Math.random()*2+1,
+
+            speed:
+                Math.random()*2+.5
+
+        });
+
+    }
+
+}
+
+
+/* =================================================
+   PLAYER
+================================================== */
+
+function resetPlayer(){
+
+    player={
+
+        x:
+            W/2,
+
+        y:
+            H-100,
+
+        w:70,
+
+        h:80,
+
+        speed:7
+
+    };
+
+}
+
+
+/* =================================================
+   INIMIGOS
+================================================== */
+
+function spawnEnemies(){
+
+    enemies=[];
+
+    const amount =
+        Math.min(
+            4+level,
+            12
+        );
+
+    for(
+        let i=0;
+        i<amount;
+        i++
+    ){
+
+        enemies.push({
+
+            x:
+                50+
+                Math.random()*
+                Math.max(
+                    50,
+                    W-100
+                ),
+
+            y:
+                -Math.random()*H,
+
+            w:55,
+
+            h:55,
+
+            speed:
+                enemySpeed+
+                Math.random()*1.3,
+
+            hp:
+                Math.max(
+                    1,
+                    Math.ceil(level/2)
+                ),
+
+            maxHp:
+                Math.max(
+                    1,
+                    Math.ceil(level/2)
+                )
+
+        });
+
+    }
+
+}
+
+
+/* =================================================
+   ASTEROIDES
+================================================== */
+
+function spawnAsteroids(){
+
+    asteroids=[];
+
+    const amount =
+        Math.min(
+            5+level,
+            14
+        );
+
+    for(
+        let i=0;
+        i<amount;
+        i++
+    ){
+
+        asteroids.push({
+
+            x:
+                Math.random()*W,
+
+            y:
+                -Math.random()*H,
+
+            r:
+                Math.random()*18+14,
+
+            speed:
+                Math.random()*2+1,
+
+            rotation:
+                Math.random()*
+                Math.PI*2
+
+        });
+
+    }
+
+}
+
+
+/* =================================================
+   TIRO
+================================================== */
+
+function shoot(){
+
+    if(
+        !gameStarted ||
+        paused
+    )
+        return;
+
+    startAudio();
+
+    shotPattern().forEach(
+        p=>{
+
+            bullets.push({
+
+                x:
+                    player.x+p.d,
+
+                y:
+                    player.y-40,
+
+                w:
+                    5*p.z,
+
+                h:
+                    18*p.z,
+
+                speed:
+                    p.s,
+
+                damage:
+                    shotPower(),
+
+                glow:
+                    8+
+                    shotPower()
+
+            });
+
+        }
+    );
+
+    beep(
+        700+
+        level*45,
+        .05
+    );
+
+}
+
+
+/* =================================================
+   EXPLOSÃO
+================================================== */
+
+function explode(x,y){
+
+    explosions.push({
+
+        x:x,
+        y:y,
+        life:20
+
+    });
+
+}
+
+
+/* =================================================
+   MENSAGEM
+================================================== */
+
+function showMessage(text){
+
+    const msg =
+        document.getElementById(
+            "message"
+        );
+
+    msg.textContent =
+        text;
+
+    msg.classList.remove(
+        "message-show"
+    );
+
+    void msg.offsetWidth;
+
+    msg.classList.add(
+        "message-show"
+    );
+
+}
+
+
+/* =================================================
+   COLISÃO
+================================================== */
+
+function hit(a,b){
+
+    return(
+
+        a.x-a.w/2 <
+        b.x+b.w/2 &&
+
+        a.x+a.w/2 >
+        b.x-b.w/2 &&
+
+        a.y-a.h/2 <
+        b.y+b.h/2 &&
+
+        a.y+a.h/2 >
+        b.y-b.h/2
+
+    );
+
+}
+
+
+/* =================================================
+   UPDATE
+================================================== */
+
+function update(){
+
+    if(!player)
+        return;
+
+
+    /* MOVIMENTO */
+
+    if(keys.left)
+        player.x -= player.speed;
+
+    if(keys.right)
+        player.x += player.speed;
+
+    if(keys.up)
+        player.y -= player.speed;
+
+    if(keys.down)
+        player.y += player.speed;
+
+
+    /* LIMITES */
+
+    player.x =
+        Math.max(
+            40,
+            Math.min(
+                W-40,
+                player.x
+            )
+        );
+
+    player.y =
+        Math.max(
+            60,
+            Math.min(
+                H-70,
+                player.y
+            )
+        );
+
+
+    /* ESTRELAS */
+
+    stars.forEach(
+        s=>{
+
+            s.y += s.speed;
+
+            if(s.y>H){
+
+                s.y=0;
+
+                s.x =
+                    Math.random()*W;
+
+            }
+
+        }
+    );
+
+
+    /* TIROS */
+
+    bullets.forEach(
+        b=>{
+
+            b.y -= b.speed;
+
+        }
+    );
+
+    bullets =
+        bullets.filter(
+            b=>b.y>-30
+        );
+
+
+    /* TIROS X INIMIGOS */
+
+    for(
+        let bi=bullets.length-1;
+        bi>=0;
+        bi--
+    ){
+
+        const b =
+            bullets[bi];
+
+        for(
+            let ei=enemies.length-1;
+            ei>=0;
+            ei--
+        ){
+
+            const e =
+                enemies[ei];
+
+            if(
+
+                b.x <
+                e.x+e.w/2 &&
+
+                b.x >
+                e.x-e.w/2 &&
+
+                b.y <
+                e.y+e.h/2 &&
+
+                b.y >
+                e.y-e.h/2
+
+            ){
+
+                bullets.splice(
+                    bi,
+                    1
+                );
+
+                e.hp -= b.damage;
+
+                explode(
+                    e.x,
+                    e.y
+                );
+
+                if(e.hp<=0){
+
+                    enemies.splice(
+                        ei,
+                        1
+                    );
+
+                    score +=
+                        100*level;
+
+                }
+
+                document.getElementById(
+                    "score"
+                ).textContent =
+                    "PONTOS: "+score;
+
+                beep(
+                    1200,
+                    .1
+                );
+
+                break;
+
+            }
+
+        }
+
+    }
+
+
+    /* INIMIGOS */
+
+    enemies.forEach(
+        e=>{
+
+            e.y += e.speed;
+
+            if(e.y>H+100){
+
+                e.y=-100;
+
+                e.x =
+                    50+
+                    Math.random()*
+                    Math.max(
+                        50,
+                        W-100
+                    );
+
+            }
+
+        }
+    );
+
+
+    /* COLISÃO INIMIGO */
+
+    enemies.forEach(
+        e=>{
+
+            if(
+                hit(
+                    player,
+                    e
+                )
+            ){
+
+                e.y=-150;
+
+                score =
+                    Math.max(
+                        0,
+                        score-50
+                    );
+
+                document.getElementById(
+                    "score"
+                ).textContent =
+                    "PONTOS: "+score;
+
+                showMessage(
+                    "💥 INIMIGO! -50"
+                );
+
+                beep(
+                    180,
+                    .15
+                );
+
+            }
+
+        }
+    );
+
+
+    /* ASTEROIDES */
+
+    asteroids.forEach(
+        a=>{
+
+            a.y += a.speed;
+
+            a.rotation += .02;
+
+            if(a.y>H+80){
+
+                a.y=-80;
+
+                a.x =
+                    Math.random()*W;
+
+            }
+
+            const box={
+
+                x:a.x,
+
+                y:a.y,
+
+                w:a.r*2,
+
+                h:a.r*2
+
+            };
+
+            if(
+                hit(
+                    player,
+                    box
+                )
+            ){
+
+                a.y=-150;
+
+                showMessage(
+                    "☄️ ASTEROIDE!"
+                );
+
+                beep(
+                    250,
+                    .08
+                );
+
+            }
+
+        }
+    );
+
+
+    /* EXPLOSÕES */
+
+    explosions.forEach(
+        e=>{
+
+            e.life--;
+
+        }
+    );
+
+    explosions =
+        explosions.filter(
+            e=>e.life>0
+        );
+
+
+    /* NOVO NÍVEL */
+
+    if(
+        enemies.length===0
+    ){
+
+        level++;
+
+        enemySpeed += .25;
+
+        updateProgression();
+
+        spawnEnemies();
+
+        spawnAsteroids();
+
+        showMessage(
+            "🚀 NÍVEL "+
+            level+
+            "!"
+        );
+
+    }
+
+}
+
+
+/* =================================================
+   DESENHAR CENÁRIO
+================================================== */
+
+function drawScene(){
+
+    /*
+       DESENHA A IMAGEM kVCsWme
+       OCUPANDO TODA A TELA
+    */
+
+    if(
+        sceneImage.complete &&
+        sceneImage.naturalWidth>0
+    ){
+
+        const iw =
+            sceneImage.naturalWidth;
+
+        const ih =
+            sceneImage.naturalHeight;
+
+        const scale =
+            Math.max(
+                W/iw,
+                H/ih
+            );
+
+        const dw =
+            iw*scale;
+
+        const dh =
+            ih*scale;
+
+        const dx =
+            (W-dw)/2;
+
+        const dy =
+            (H-dh)/2;
+
+        ctx.drawImage(
+            sceneImage,
+            dx,
+            dy,
+            dw,
+            dh
+        );
+
+    }else{
+
+        /*
+           FUNDO DE SEGURANÇA
+        */
+
+        const gradient =
+            ctx.createLinearGradient(
+                0,
+                0,
+                0,
+                H
+            );
+
+        gradient.addColorStop(
+            0,
+            "#020611"
+        );
+
+        gradient.addColorStop(
+            1,
+            "#001020"
+        );
+
+        ctx.fillStyle =
+            gradient;
+
+        ctx.fillRect(
+            0,
+            0,
+            W,
+            H
+        );
+
+    }
+
+}
+
+
+/* =================================================
+   DESENHAR
+================================================== */
+
+function draw(){
+
+    /*
+       PRIMEIRO O NOVO CENÁRIO
+    */
+
+    drawScene();
+
+
+    /*
+       ESTRELAS POR CIMA DO CENÁRIO
+    */
+
+    ctx.fillStyle="rgba(255,255,255,.65)";
+
+    stars.forEach(
+        s=>{
+
+            ctx.fillRect(
+                s.x,
+                s.y,
+                s.size,
+                s.size
+            );
+
+        }
+    );
+
+
+    /* =================================================
+       NAVE PRINCIPAL
+    ================================================= */
+
+    if(
+        player &&
+        playerImage.complete &&
+        playerImage.naturalWidth>0
+    ){
+
+        ctx.save();
+
+        ctx.shadowBlur=18;
+
+        ctx.shadowColor="#39ff14";
+
+        ctx.drawImage(
+
+            playerImage,
+
+            player.x-40,
+
+            player.y-45,
+
+            80,
+
+            90
+
+        );
+
+        ctx.restore();
+
+    }
+
+
+    /* =================================================
+       TIROS
+    ================================================= */
+
+    ctx.fillStyle="#39ff14";
+
+    bullets.forEach(
+        b=>{
+
+            ctx.shadowBlur=10;
+
+            ctx.shadowColor="#39ff14";
+
+            ctx.fillRect(
+
+                b.x-2,
+
+                b.y,
+
+                b.w,
+
+                b.h
+
+            );
+
+        }
+    );
+
+    ctx.shadowBlur=0;
+
+
+    /* =================================================
+       INIMIGOS
+    ================================================= */
+
+    enemies.forEach(
+        e=>{
+
+            ctx.save();
+
+            ctx.translate(
+                e.x,
+                e.y
+            );
+
+            ctx.fillStyle="#ff2222";
+
+            ctx.shadowBlur=15;
+
+            ctx.shadowColor="#ff0000";
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                0,
+                -28
+            );
+
+            ctx.lineTo(
+                28,
+                25
+            );
+
+            ctx.lineTo(
+                0,
+                12
+            );
+
+            ctx.lineTo(
+                -28,
+                25
+            );
+
+            ctx.closePath();
+
+            ctx.fill();
+
+            if(e.maxHp>1){
+
+                ctx.shadowBlur=0;
+
+                ctx.fillStyle="#300";
+
+                ctx.fillRect(
+                    -27,
+                    -39,
+                    54,
+                    5
+                );
+
+                ctx.fillStyle="#39ff14";
+
+                ctx.fillRect(
+
+                    -27,
+
+                    -39,
+
+                    54*
+                    (e.hp/e.maxHp),
+
+                    5
+
+                );
+
+            }
+
+            ctx.restore();
+
+        }
+    );
+
+
+    /* =================================================
+       ASTEROIDES
+    ================================================= */
+
+    asteroids.forEach(
+        a=>{
+
+            ctx.save();
+
+            ctx.translate(
+                a.x,
+                a.y
+            );
+
+            ctx.rotate(
+                a.rotation
+            );
+
+            ctx.fillStyle="#777";
+
+            ctx.strokeStyle="#aaa";
+
+            ctx.lineWidth=3;
+
+            ctx.beginPath();
+
+            const points=8;
+
+            for(
+                let i=0;
+                i<points;
+                i++
+            ){
+
+                const angle =
+                    i*
+                    Math.PI*2/
+                    points;
+
+                const radius =
+                    a.r*
+                    (
+                        .75+
+                        Math.random()*.35
+                    );
+
+                const x =
+                    Math.cos(angle)*
+                    radius;
+
+                const y =
+                    Math.sin(angle)*
+                    radius;
+
+                if(i===0){
+
+                    ctx.moveTo(
+                        x,
+                        y
+                    );
+
+                }else{
+
+                    ctx.lineTo(
+                        x,
+                        y
+                    );
+
+                }
+
+            }
+
+            ctx.closePath();
+
+            ctx.fill();
+
+            ctx.stroke();
+
+            ctx.restore();
+
+        }
+    );
+
+
+    /* =================================================
+       EXPLOSÕES
+    ================================================= */
+
+    explosions.forEach(
+        e=>{
+
+            const size =
+                (20-e.life)*3;
+
+            ctx.beginPath();
+
+            ctx.arc(
+
+                e.x,
+
+                e.y,
+
+                size,
+
+                0,
+
+                Math.PI*2
+
+            );
+
+            ctx.strokeStyle="#39ff14";
+
+            ctx.lineWidth=4;
+
+            ctx.globalAlpha =
+                e.life/20;
+
+            ctx.stroke();
+
+            ctx.globalAlpha=1;
+
+        }
+    );
+
+}
+
+
+/* =================================================
+   LOOP
+================================================== */
+
+function loop(){
+
+    if(
+        !gameStarted ||
+        paused
+    ){
+
+        animationId=null;
+
+        return;
+
+    }
+
+    update();
+
+    draw();
+
+    animationId =
+        requestAnimationFrame(
+            loop
+        );
+
+}
+
+
+/* =================================================
+   SALVAR JOGO
+================================================== */
+
+const SAVE_KEY =
+    "mael66_navinha_save";
+
+
+function saveGame(){
+
+    try{
+
+        localStorage.setItem(
+
+            SAVE_KEY,
+
+            JSON.stringify({
+
+                score:score,
+
+                level:level,
+
+                enemySpeed:enemySpeed
+
+            })
+
+        );
+
+    }catch(e){}
+
+}
+
+
+function loadGame(){
+
+    try{
+
+        const data =
+            JSON.parse(
+                localStorage.getItem(
+                    SAVE_KEY
+                )
+            );
+
+        if(data){
+
+            score =
+                Number(data.score)||0;
+
+            level =
+                Math.max(
+                    1,
+                    Number(data.level)||1
+                );
+
+            enemySpeed =
+                Number(data.enemySpeed)||1.7;
+
+        }
+
+    }catch(e){}
+
+}
+
+
+/* =================================================
+   COMEÇAR
+================================================== */
+
+function startGame(){
+
+    startAudio();
+
+    document.getElementById(
+        "mainMenu"
+    ).style.display="none";
+
+    document.getElementById(
+        "accountScreen"
+    ).style.display="none";
+
+    document.getElementById(
+        "pauseBtn"
+    ).style.display="block";
+
+    document.getElementById(
+        "hud"
+    ).style.display="flex";
+
+    document.getElementById(
+        "shipPower"
+    ).style.display="block";
+
+    document.querySelector(
+        ".controls"
+    ).style.display="flex";
+
+    createStars();
+
+    resetPlayer();
+
+    bullets=[];
+
+    explosions=[];
+
+    document.getElementById(
+        "score"
+    ).textContent =
+        "PONTOS: "+score;
+
+    document.getElementById(
+        "level"
+    ).textContent =
+        "NÍVEL: "+level;
+
+    spawnEnemies();
+
+    spawnAsteroids();
+
+    gameStarted=true;
+
+    paused=false;
+
+    updateProgression();
+
+    if(animationId===null){
+
+        loop();
+
+    }
+
+}
+
+
+/* =================================================
+   PAUSE
+================================================== */
+
+function pauseGame(){
+
+    if(
+        !gameStarted ||
+        paused
+    )
+        return;
+
+    paused=true;
+
+    keys.left=
+    keys.right=
+    keys.up=
+    keys.down=
+        false;
+
+    document.getElementById(
+        "pauseInfo"
+    ).innerHTML =
+
+        "NÍVEL: "+level+
+        "<br>"+
+        "PONTOS: "+score+
+        "<br>"+
+        "TIRO: "+shotPower()+
+        " • NAVE PRINCIPAL";
+
+    document.getElementById(
+        "pauseScreen"
+    ).style.display="flex";
+
+    saveGame();
+
+}
+
+
+function resumeGame(){
+
+    if(!gameStarted)
+        return;
+
+    startAudio();
+
+    paused=false;
+
+    document.getElementById(
+        "pauseScreen"
+    ).style.display="none";
+
+    if(animationId===null){
+
+        loop();
+
+    }
+
+}
+
+
+function pauseMenu(){
+
+    saveGame();
+
+    gameStarted=false;
+
+    paused=false;
+
+    animationId=null;
+
+    document.getElementById(
+        "pauseScreen"
+    ).style.display="none";
+
+    document.getElementById(
+        "mainMenu"
+    ).style.display="flex";
+
+    document.getElementById(
+        "hud"
+    ).style.display="none";
+
+    document.getElementById(
+        "shipPower"
+    ).style.display="none";
+
+    document.querySelector(
+        ".controls"
+    ).style.display="none";
+
+    document.getElementById(
+        "pauseBtn"
+    ).style.display="none";
+
+    document.getElementById(
+        "menuShip"
+    ).src =
+        MAIN_SHIP_URL;
+
+}
+
+
+document.getElementById(
+    "pauseBtn"
+).onclick =
+    ()=>{
+
+        if(paused){
+
+            resumeGame();
+
+        }else{
+
+            pauseGame();
+
+        }
+
+    };
+
+
+document.getElementById(
+    "resumeBtn"
+).onclick =
+    resumeGame;
+
+
+document.getElementById(
+    "pauseMenuBtn"
+).onclick =
+    pauseMenu;
+
+
+/* =================================================
+   TELA CHEIA
+================================================== */
+
+async function toggleFullscreen(){
+
+    try{
+
+        if(
+            !document.fullscreenElement
+        ){
+
+            await document
+                .documentElement
+                .requestFullscreen();
+
+        }else{
+
+            await document
+                .exitFullscreen();
+
+        }
+
+    }catch(e){
+
+        showMessage(
+            "⛶ TELA CHEIA INDISPONÍVEL"
+        );
+
+    }
+
+}
+
+
+document.getElementById(
+    "fullscreenBtn"
+).onclick =
+    toggleFullscreen;
+
+
+document.getElementById(
+    "menuFullscreenBtn"
+).onclick =
+    toggleFullscreen;
+
+
+/* =================================================
+   BOTÕES DE MOVIMENTO
+================================================== */
+
+function holdButton(
+    button,
+    key
+){
+
+    button.addEventListener(
+        "pointerdown",
+        e=>{
+
+            e.preventDefault();
+
+            startAudio();
+
+            keys[key]=true;
+
+            try{
+
+                button.setPointerCapture(
+                    e.pointerId
+                );
+
+            }catch(err){}
+
+        }
+    );
+
+
+    function release(e){
+
+        e.preventDefault();
+
+        keys[key]=false;
+
+    }
+
+
+    button.addEventListener(
+        "pointerup",
+        release
+    );
+
+    button.addEventListener(
+        "pointercancel",
+        release
+    );
+
+    button.addEventListener(
+        "lostpointercapture",
+        release
+    );
+
+}
+
+
+holdButton(
+    document.getElementById("left"),
+    "left"
+);
+
+holdButton(
+    document.getElementById("right"),
+    "right"
+);
+
+holdButton(
+    document.getElementById("up"),
+    "up"
+);
+
+holdButton(
+    document.getElementById("down"),
+    "down"
+);
+
+
+/* =================================================
+   ATIRAR
+================================================== */
+
+document.getElementById(
+    "shoot"
+).addEventListener(
+    "pointerdown",
+    e=>{
+
+        e.preventDefault();
+
+        shoot();
+
+    }
+);
+
+
+/* =================================================
+   TECLADO
+================================================== */
+
+window.addEventListener(
+    "keydown",
+    e=>{
+
+        if(
+            e.key==="ArrowLeft"
+        )
+            keys.left=true;
+
+        if(
+            e.key==="ArrowRight"
+        )
+            keys.right=true;
+
+        if(
+            e.key==="ArrowUp"
+        )
+            keys.up=true;
+
+        if(
+            e.key==="ArrowDown"
+        )
+            keys.down=true;
+
+        if(
+            e.key==="p"||
+            e.key==="P"
+        ){
+
+            if(paused){
+
+                resumeGame();
+
+            }else{
+
+                pauseGame();
+
+            }
+
+        }
+
+        if(
+            e.key===" "
+        ){
+
+            e.preventDefault();
+
+            shoot();
+
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    "keyup",
+    e=>{
+
+        if(
+            e.key==="ArrowLeft"
+        )
+            keys.left=false;
+
+        if(
+            e.key==="ArrowRight"
+        )
+            keys.right=false;
+
+        if(
+            e.key==="ArrowUp"
+        )
+            keys.up=false;
+
+        if(
+            e.key==="ArrowDown"
+        )
+            keys.down=false;
+
+    }
+);
+
+
+/* =================================================
+   CONTAS
+================================================== */
+
+const ACCOUNTS_KEY =
+    "mael66_navinha_contas";
+
+let currentUser=null;
+
+
+function getAccounts(){
+
+    try{
+
+        return JSON.parse(
+
+            localStorage.getItem(
+                ACCOUNTS_KEY
+            )
+
+        ) || {};
+
+    }catch(e){
+
+        return {};
+
+    }
+
+}
+
+
+function saveAccounts(accounts){
+
+    localStorage.setItem(
+
+        ACCOUNTS_KEY,
+
+        JSON.stringify(accounts)
+
+    );
+
+}
+
+
+/* =================================================
+   REGISTRAR
+================================================== */
+
+document.getElementById(
+    "registerBtn"
+).onclick =
+    ()=>{
+
+        const name =
+            document.getElementById(
+                "accountName"
+            ).value.trim();
+
+        const password =
+            document.getElementById(
+                "accountPassword"
+            ).value;
+
+        const msg =
+            document.getElementById(
+                "accountMsg"
+            );
+
+        if(!name || !password){
+
+            msg.textContent =
+                "⚠️ PREENCHA NOME E SENHA";
+
+            return;
+
+        }
+
+        const accounts =
+            getAccounts();
+
+        if(accounts[name]){
+
+            msg.textContent =
+                "⚠️ ESSA CONTA JÁ EXISTE";
+
+            return;
+
+        }
+
+        accounts[name]={
+
+            password:password,
+
+            score:0,
+
+            level:1,
+
+            enemySpeed:1.7
+
+        };
+
+        saveAccounts(accounts);
+
+        currentUser=name;
+
+        score=0;
+
+        level=1;
+
+        enemySpeed=1.7;
+
+        saveGame();
+
+        msg.textContent =
+            "✅ CONTA CRIADA!";
+
+        setTimeout(
+            startGame,
+            700
+        );
+
+    };
+
+
+/* =================================================
+   LOGIN
+================================================== */
+
+document.getElementById(
+    "loginBtn"
+).onclick =
+    ()=>{
+
+        const name =
+            document.getElementById(
+                "accountName"
+            ).value.trim();
+
+        const password =
+            document.getElementById(
+                "accountPassword"
+            ).value;
+
+        const msg =
+            document.getElementById(
+                "accountMsg"
+            );
+
+        const accounts =
+            getAccounts();
+
+        if(
+            !accounts[name] ||
+            accounts[name].password !== password
+        ){
+
+            msg.textContent =
+                "❌ NOME OU SENHA INCORRETOS";
+
+            return;
+
+        }
+
+        currentUser=name;
+
+        score =
+            accounts[name].score || 0;
+
+        level =
+            accounts[name].level || 1;
+
+        enemySpeed =
+            accounts[name].enemySpeed || 1.7;
+
+        saveGame();
+
+        msg.textContent =
+            "✅ LOGIN REALIZADO!";
+
+        setTimeout(
+            startGame,
+            500
+        );
+
+    };
+
+
+/* =================================================
+   ABRIR CONTA
+================================================== */
+
+document.getElementById(
+    "accountBtn"
+).onclick =
+    ()=>{
+
+        document.getElementById(
+            "mainMenu"
+        ).style.display="none";
+
+        document.getElementById(
+            "accountScreen"
+        ).style.display="flex";
+
+        document.getElementById(
+            "accountMsg"
+        ).textContent="";
+
+    };
+
+
+/* =================================================
+   VOLTAR AO MENU
+================================================== */
+
+document.getElementById(
+    "backMenuBtn"
+).onclick =
+    ()=>{
+
+        document.getElementById(
+            "accountScreen"
+        ).style.display="none";
+
+        document.getElementById(
+            "mainMenu"
+        ).style.display="flex";
+
+    };
+
+
+/* =================================================
+   JOGAR
+================================================== */
+
+document.getElementById(
+    "playBtn"
+).onclick =
+    ()=>{
+
+        loadGame();
+
+        startGame();
+
+    };
+
+
+/* =================================================
+   LOADING
+================================================== */
+
+let loadingProgress=0;
+
+const loadingProgressBar =
+    document.getElementById(
+        "loadingProgress"
+    );
+
+const loadingText =
+    document.getElementById(
+        "loadingText"
+    );
+
+
+const loadingMessages=[
+
+    "CARREGANDO JOGO...",
+
+    "CARREGANDO NAVE...",
+
+    "CARREGANDO CENÁRIO...",
+
+    "PREPARANDO INIMIGOS...",
+
+    "PREPARANDO ASTEROIDES...",
+
+    "CARREGANDO SISTEMA DE TIRO...",
+
+    "PREPARANDO NÍVEIS...",
+
+    "QUASE PRONTO..."
+
+];
+
+
+let loadingIndex=0;
+
+
+function updateLoading(){
+
+    loadingProgress +=
+        Math.random()*12+5;
+
+    if(
+        loadingProgress>=100
+    ){
+
+        loadingProgress=100;
+
+        loadingProgressBar.style.width =
+            "100%";
+
+        loadingText.textContent =
+            "JOGO PRONTO!";
+
+        setTimeout(
+            finishLoading,
+            500
+        );
+
+        return;
+
+    }
+
+    loadingProgressBar.style.width =
+        loadingProgress+"%";
+
+    loadingIndex =
+        Math.min(
+            loadingMessages.length-1,
+            Math.floor(
+                loadingProgress/
+                (100/loadingMessages.length)
+            )
+        );
+
+    loadingText.textContent =
+        loadingMessages[
+            loadingIndex
+        ];
+
+    setTimeout(
+        updateLoading,
+        180
+    );
+
+}
+
+
+function finishLoading(){
+
+    document.getElementById(
+        "loading"
+    ).style.display="none";
+
+    document.getElementById(
+        "mainMenu"
+    ).style.display="flex";
+
+    document.getElementById(
+        "hud"
+    ).style.display="none";
+
+    document.getElementById(
+        "shipPower"
+    ).style.display="none";
+
+}
+
+
+/* =================================================
+   CARREGAR IMAGENS
+================================================== */
+
+let imagesReady=0;
+
+function imageReady(){
+
+    imagesReady++;
+
+    if(imagesReady>=2){
+
+        setTimeout(
+            updateLoading,
+            300
+        );
+
+    }
+
+}
+
+
+/*
+   NAVE
+*/
+
+playerImage.onload =
+    imageReady;
+
+playerImage.onerror =
+    imageReady;
+
+
+/*
+   CENÁRIO
+*/
+
+sceneImage.onload =
+    imageReady;
+
+sceneImage.onerror =
+    imageReady;
+
+
+/*
+   GARANTIR LOADING
+*/
+
+setTimeout(
+    ()=>{
+
+        if(imagesReady<2){
+
+            updateLoading();
+
+        }
+
+    },
+    1200
+);
+
+</script>
+
+</body>
+</html>

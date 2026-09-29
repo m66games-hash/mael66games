@@ -1,0 +1,3414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no,
+viewport-fit=cover">
+
+<title>MAEL66 PAINT GAME</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#050505;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    display:flex;
+    flex-direction:column;
+    color:#fff;
+}
+
+/* =========================================================
+LOADING
+========================================================= */
+
+#loadingScreen{
+    position:fixed;
+    inset:0;
+    z-index:9999999;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #172218 0%,
+            #070707 50%,
+            #000 100%
+        );
+
+    transition:
+        opacity .7s ease,
+        visibility .7s ease;
+}
+
+#loadingScreen.esconder{
+    opacity:0;
+    visibility:hidden;
+}
+
+#loadingLogo{
+    width:min(78vw,360px);
+    max-height:280px;
+    object-fit:contain;
+
+    filter:
+        drop-shadow(0 0 10px #00ff66)
+        drop-shadow(0 0 25px #ffd700);
+
+    animation:
+        logoPulse 1.8s infinite;
+}
+
+@keyframes logoPulse{
+
+    0%,100%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.035);
+    }
+
+}
+
+.loadingTitulo{
+    margin-top:12px;
+
+    color:#ffd700;
+
+    font-size:clamp(18px,5vw,27px);
+
+    font-weight:900;
+
+    letter-spacing:2px;
+
+    text-shadow:
+        0 0 10px #ffd700;
+}
+
+.loadingSub{
+    margin-top:5px;
+
+    color:#8affad;
+
+    font-size:12px;
+
+    letter-spacing:1px;
+}
+
+.loadingBox{
+    width:min(78vw,360px);
+
+    margin-top:25px;
+}
+
+.loadingBar{
+    height:14px;
+
+    border:2px solid #ffd700;
+
+    border-radius:20px;
+
+    padding:2px;
+
+    background:#111;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 0 10px #ffd700,
+        inset 0 0 10px #000;
+}
+
+#loadingProgress{
+    width:0%;
+    height:100%;
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #00ff66,
+            #ffd700,
+            #fff,
+            #00ff66
+        );
+
+    background-size:250% 100%;
+
+    animation:
+        loadingMove 1s linear infinite;
+
+    transition:
+        width .15s linear;
+}
+
+@keyframes loadingMove{
+
+    from{
+        background-position:0% 0;
+    }
+
+    to{
+        background-position:250% 0;
+    }
+
+}
+
+#loadingStatus{
+    margin-top:9px;
+
+    text-align:center;
+
+    color:#ddd;
+
+    font-size:12px;
+}
+
+/* =========================================================
+GAME
+========================================================= */
+
+#game{
+    width:100%;
+    height:100%;
+
+    display:flex;
+    flex-direction:column;
+
+    opacity:0;
+
+    transition:
+        opacity .5s ease;
+}
+
+#game.pronto{
+    opacity:1;
+}
+
+/* =========================================================
+TOPO
+========================================================= */
+
+#topo{
+    height:58px;
+    min-height:58px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:
+        6px 12px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #151515,
+            #080808
+        );
+
+    border-bottom:
+        1px solid #d5a900;
+
+    box-shadow:
+        0 3px 15px #000;
+}
+
+.marca{
+    display:flex;
+    align-items:center;
+    gap:9px;
+}
+
+.logoMini{
+    width:39px;
+    height:39px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:11px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffe45c,
+            #d99d00
+        );
+
+    color:#050505;
+
+    font-size:19px;
+
+    font-weight:1000;
+
+    box-shadow:
+        0 0 12px #ffd700;
+}
+
+.marcaTexto{
+    display:flex;
+    flex-direction:column;
+}
+
+.marcaTexto strong{
+    color:#ffd700;
+
+    font-size:15px;
+
+    letter-spacing:1px;
+}
+
+.marcaTexto span{
+    color:#8affaa;
+
+    font-size:9px;
+
+    letter-spacing:1.5px;
+}
+
+.topStatus{
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+.statusBox{
+    min-width:55px;
+    height:34px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:0 9px;
+
+    border-radius:10px;
+
+    background:#101010;
+
+    border:
+        1px solid #303030;
+
+    font-size:11px;
+
+    font-weight:bold;
+}
+
+#corAtualTop{
+    border-color:#ffd700;
+}
+
+#bolinhaCorTop{
+    width:16px;
+    height:16px;
+
+    border-radius:50%;
+
+    background:#000;
+
+    border:2px solid #fff;
+}
+
+/* =========================================================
+ÁREA
+========================================================= */
+
+#area{
+    position:relative;
+
+    flex:1;
+
+    min-height:0;
+
+    overflow:hidden;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #222 0%,
+            #0b0b0b 75%
+        );
+
+    touch-action:none;
+
+    box-shadow:
+        inset 0 0 30px #000;
+}
+
+#area::after{
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    pointer-events:none;
+
+    border:
+        1px solid rgba(255,215,0,.16);
+
+    box-shadow:
+        inset 0 0 20px rgba(0,0,0,.65);
+}
+
+#viewport{
+    position:absolute;
+
+    left:0;
+    top:0;
+
+    width:100%;
+    height:100%;
+
+    transform-origin:0 0;
+
+    will-change:transform;
+}
+
+#canvas{
+    position:absolute;
+
+    left:0;
+    top:0;
+
+    display:block;
+
+    background:#fff;
+
+    touch-action:none;
+
+    box-shadow:
+        0 0 25px rgba(0,0,0,.8);
+}
+
+#zoomInfo{
+    position:absolute;
+
+    top:12px;
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    z-index:30;
+
+    padding:7px 13px;
+
+    border-radius:20px;
+
+    background:
+        rgba(0,0,0,.72);
+
+    border:
+        1px solid rgba(255,215,0,.5);
+
+    color:#ffd700;
+
+    font-size:11px;
+
+    font-weight:bold;
+
+    backdrop-filter:blur(7px);
+
+    pointer-events:none;
+}
+
+#modoInfo{
+    position:absolute;
+
+    left:12px;
+    bottom:12px;
+
+    z-index:30;
+
+    padding:7px 11px;
+
+    border-radius:10px;
+
+    background:
+        rgba(0,0,0,.7);
+
+    border:
+        1px solid rgba(0,255,100,.35);
+
+    color:#8affaa;
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    pointer-events:none;
+
+    backdrop-filter:blur(5px);
+}
+
+/* =========================================================
+PAINEL
+========================================================= */
+
+#painel{
+    position:relative;
+
+    max-height:min(42dvh,300px);
+
+    min-height:0;
+
+    overflow-y:auto;
+    overflow-x:hidden;
+
+    padding:
+        9px
+        10px
+        calc(
+            10px +
+            env(safe-area-inset-bottom)
+        );
+
+    background:
+        linear-gradient(
+            180deg,
+            #151515,
+            #080808
+        );
+
+    border-top:
+        2px solid #d6aa00;
+
+    box-shadow:
+        0 -8px 25px rgba(0,0,0,.65);
+
+    scrollbar-width:none;
+}
+
+#painel::-webkit-scrollbar{
+    display:none;
+}
+
+.panelHeader{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:7px;
+}
+
+.panelTitle{
+    display:flex;
+
+    flex-direction:column;
+}
+
+.panelTitle strong{
+    color:#ffd700;
+
+    font-size:12px;
+
+    letter-spacing:1px;
+}
+
+.panelTitle span{
+    margin-top:2px;
+
+    color:#999;
+
+    font-size:9px;
+}
+
+.panelBadge{
+    padding:6px 9px;
+
+    border-radius:8px;
+
+    background:#07150b;
+
+    border:
+        1px solid #00b84f;
+
+    color:#00ff66;
+
+    font-size:9px;
+
+    font-weight:bold;
+}
+
+.sectionLabel{
+    margin:7px 2px 5px;
+
+    color:#777;
+
+    font-size:9px;
+
+    font-weight:bold;
+
+    letter-spacing:1.2px;
+}
+
+/* =========================================================
+CORES
+========================================================= */
+
+#cores{
+    display:flex;
+
+    gap:8px;
+
+    padding:
+        3px 2px 6px;
+
+    overflow-x:auto;
+
+    scrollbar-width:none;
+}
+
+#cores::-webkit-scrollbar{
+    display:none;
+}
+
+.cor{
+    flex:0 0 auto;
+
+    width:34px;
+    height:34px;
+
+    border-radius:50%;
+
+    border:
+        2px solid #333;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 2px 7px rgba(0,0,0,.6);
+
+    transition:
+        transform .15s,
+        border .15s,
+        box-shadow .15s;
+}
+
+.cor:active{
+    transform:scale(.88);
+}
+
+.cor.selecionada{
+    border-color:#fff;
+
+    transform:scale(1.08);
+
+    box-shadow:
+        0 0 0 2px #ffd700,
+        0 0 12px #ffd700;
+}
+
+/* =========================================================
+CONTROLES
+========================================================= */
+
+.controlsGrid{
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,1.2fr)
+        minmax(0,1fr);
+
+    gap:8px;
+}
+
+.cardControle{
+    min-width:0;
+
+    padding:8px;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1b1b1b,
+            #0c0c0c
+        );
+
+    border:
+        1px solid #2b2b2b;
+}
+
+.cardTitulo{
+    margin-bottom:6px;
+
+    color:#777;
+
+    font-size:8px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+}
+
+.ferramentas{
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:5px;
+}
+
+.btn{
+    min-height:38px;
+
+    border:
+        1px solid #333;
+
+    border-radius:9px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #242424,
+            #111
+        );
+
+    color:#eee;
+
+    font-size:9px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.05);
+}
+
+.btn:active{
+    transform:scale(.95);
+}
+
+.btn.ativo{
+    border-color:#ffd700;
+
+    background:
+        linear-gradient(
+            180deg,
+            #624c00,
+            #251d00
+        );
+
+    color:#ffd700;
+
+    box-shadow:
+        0 0 10px rgba(255,215,0,.2);
+}
+
+.btnBalde{
+    border-color:#00a94f;
+}
+
+.btnBalde.ativo{
+    border-color:#00ff66;
+
+    background:
+        linear-gradient(
+            180deg,
+            #064e29,
+            #031c0e
+        );
+
+    color:#00ff66;
+}
+
+.btnMover{
+    border-color:#3d8cff;
+}
+
+.btnMover.ativo{
+    border-color:#58a8ff;
+
+    background:
+        linear-gradient(
+            180deg,
+            #08366d,
+            #06162b
+        );
+
+    color:#65b5ff;
+}
+
+/* =========================================================
+TAMANHO
+========================================================= */
+
+.tamanhoLinha{
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+}
+
+#tamanho{
+    flex:1;
+
+    height:6px;
+
+    accent-color:#00ff66;
+}
+
+#preview{
+    flex:0 0 auto;
+
+    width:30px;
+    height:30px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:#101010;
+
+    border:
+        1px solid #333;
+}
+
+#previewDot{
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:#000;
+
+    border:
+        1px solid #fff;
+}
+
+/* =========================================================
+AÇÕES
+========================================================= */
+
+.acoes{
+    display:grid;
+
+    grid-template-columns:
+        repeat(6,1fr);
+
+    gap:6px;
+
+    margin-top:8px;
+}
+
+.btnAcao{
+    min-height:37px;
+
+    border-radius:9px;
+
+    border:
+        1px solid #333;
+
+    background:#121212;
+
+    color:#ddd;
+
+    font-size:8px;
+
+    font-weight:bold;
+}
+
+.btnAcao:active{
+    transform:scale(.94);
+}
+
+.btnDesfazer{
+    border-color:#5277ff;
+}
+
+.btnLimpar{
+    border-color:#ff4545;
+
+    color:#ff7777;
+}
+
+.btnReset{
+    border-color:#b66cff;
+}
+
+.btnCentralizar{
+    border-color:#00aaff;
+
+    color:#4fc8ff;
+}
+
+.btnSalvar{
+    border-color:#00c95a;
+
+    color:#00ff66;
+}
+
+.btnTela{
+    border-color:#4fa8ff;
+
+    color:#62b4ff;
+}
+
+/* =========================================================
+FULLSCREEN
+========================================================= */
+
+body.modoTelaCheia{
+    position:fixed;
+
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    overflow:hidden;
+
+    z-index:999999;
+}
+
+body.modoTelaCheia #topo{
+    display:none;
+}
+
+body.modoTelaCheia #game{
+    width:100%;
+    height:100%;
+}
+
+/* =========================================================
+CELULAR
+========================================================= */
+
+@media(max-height:650px){
+
+    #topo{
+        height:49px;
+        min-height:49px;
+    }
+
+    .logoMini{
+        width:33px;
+        height:33px;
+
+        font-size:16px;
+    }
+
+    .marcaTexto strong{
+        font-size:12px;
+    }
+
+    .statusBox{
+        height:29px;
+
+        min-width:48px;
+
+        font-size:9px;
+    }
+
+    .cor{
+        width:30px;
+        height:30px;
+    }
+
+    .btn{
+        min-height:34px;
+
+        font-size:8px;
+    }
+
+    .btnAcao{
+        min-height:34px;
+
+        font-size:7px;
+    }
+
+    #painel{
+        padding-top:6px;
+    }
+
+}
+
+@media(max-width:360px){
+
+    .topStatus .statusBox{
+        padding:0 5px;
+
+        min-width:42px;
+    }
+
+    .controlsGrid{
+        grid-template-columns:1fr;
+    }
+
+    .ferramentas{
+        grid-template-columns:
+            repeat(4,1fr);
+    }
+
+    .acoes{
+        grid-template-columns:
+            repeat(6,52px);
+
+        overflow-x:auto;
+    }
+
+    .btnAcao{
+        min-width:52px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+LOADING
+===================================================== -->
+
+<div id="loadingScreen">
+
+    <img
+        id="loadingLogo"
+        src="https://i.imgur.com/DamDWEd.png"
+        alt="MAEL66">
+
+    <div class="loadingTitulo">
+        MAEL66 PAINT GAME
+    </div>
+
+    <div class="loadingSub">
+        ESTÚDIO DE DESENHO
+    </div>
+
+    <div class="loadingBox">
+
+        <div class="loadingBar">
+
+            <div id="loadingProgress"></div>
+
+        </div>
+
+        <div id="loadingStatus">
+            Preparando ferramentas...
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+GAME
+===================================================== -->
+
+<div id="game">
+
+    <div id="topo">
+
+        <div class="marca">
+
+            <div class="logoMini">
+                66
+            </div>
+
+            <div class="marcaTexto">
+
+                <strong>
+                    MAEL66 PAINT
+                </strong>
+
+                <span>
+                    DESENHE • PINTE • CRIE
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="topStatus">
+
+            <div
+                class="statusBox"
+                id="corAtualTop">
+
+                <span
+                    id="bolinhaCorTop">
+                </span>
+
+            </div>
+
+            <div
+                class="statusBox"
+                id="zoomTop">
+
+                100%
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+    ÁREA DO DESENHO
+    ================================================= -->
+
+    <div id="area">
+
+        <div id="zoomInfo">
+            ZOOM: 100%
+        </div>
+
+        <div id="modoInfo">
+            🖌️ PINCEL
+        </div>
+
+        <div id="viewport">
+
+            <canvas id="canvas"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+    PAINEL
+    ================================================= -->
+
+    <div id="painel">
+
+        <div class="panelHeader">
+
+            <div class="panelTitle">
+
+                <strong>
+                    ESTÚDIO DE PINTURA
+                </strong>
+
+                <span id="toolStatus">
+                    Pincel • 8 px
+                </span>
+
+            </div>
+
+            <div class="panelBadge">
+                MAEL66
+            </div>
+
+        </div>
+
+
+        <!-- CORES -->
+
+        <div class="sectionLabel">
+            PALETA DE CORES
+        </div>
+
+        <div id="cores">
+
+            <button
+                class="cor selecionada"
+                style="background:#000"
+                data-cor="#000000">
+            </button>
+
+            <button
+                class="cor"
+                style="background:#fff"
+                data-cor="#ffffff">
+            </button>
+
+            <button
+                class="cor"
+                style="background:#ff0000"
+                data-cor="#ff0000">
+            </button>
+
+            <button
+                class="cor"
+                style="background:#ff7a00"
+                data-cor="#ff7a00">
+            </button>
+
+            <button
+                class="cor"
+                style="background:#ffd700"
+                data-cor="#ffd700">
+            </button>
+
+            <button
+                class="cor"
+                style="background:#00ff66"
+                data-cor="#00ff66">
+            </button>
+
+            <button
+                class="cor"
+                style="background:#00d9ff"
+                data-cor="#00d9ff">
+            </button>
+
+            <button
+                class="cor"
+                style="background:#0066ff"
+                data-cor="#0066ff">
+            </button>
+
+            <button
+                class="cor"
+                style="background:#7a00ff"
+                data-cor="#7a00ff">
+            </button>
+
+            <button
+                class="cor"
+                style="background:#ff00c8"
+                data-cor="#ff00c8">
+            </button>
+
+            <button
+                class="cor"
+                style="background:#8b4513"
+                data-cor="#8b4513">
+            </button>
+
+            <button
+                class="cor"
+                style="background:#808080"
+                data-cor="#808080">
+            </button>
+
+        </div>
+
+
+        <!-- CONTROLES -->
+
+        <div class="controlsGrid">
+
+            <div class="cardControle">
+
+                <div class="cardTitulo">
+                    FERRAMENTAS
+                </div>
+
+                <div class="ferramentas">
+
+                    <button
+                        class="btn"
+                        id="btnMover">
+
+                        🖐️
+                        <br>
+                        Mover
+
+                    </button>
+
+                    <button
+                        class="btn ativo"
+                        id="btnPincel">
+
+                        🖌️
+                        <br>
+                        Pincel
+
+                    </button>
+
+                    <button
+                        class="btn"
+                        id="btnBorracha">
+
+                        🧽
+                        <br>
+                        Borracha
+
+                    </button>
+
+                    <button
+                        class="btn btnBalde"
+                        id="btnBalde">
+
+                        🪣
+                        <br>
+                        Balde
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="cardControle">
+
+                <div class="cardTitulo">
+                    TAMANHO DO PINCEL
+                </div>
+
+                <div class="tamanhoLinha">
+
+                    <input
+                        id="tamanho"
+                        type="range"
+                        min="1"
+                        max="80"
+                        value="8">
+
+                    <div id="preview">
+
+                        <div id="previewDot"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- AÇÕES -->
+
+        <div class="acoes">
+
+            <button
+                class="btnAcao btnDesfazer"
+                id="btnUndo">
+
+                ↩️
+                <br>
+                Desfazer
+
+            </button>
+
+            <button
+                class="btnAcao btnLimpar"
+                id="btnLimpar">
+
+                🗑️
+                <br>
+                Limpar
+
+            </button>
+
+            <button
+                class="btnAcao btnReset"
+                id="btnResetZoom">
+
+                🔍
+                <br>
+                Zoom
+
+            </button>
+
+            <button
+                class="btnAcao btnCentralizar"
+                id="btnCentralizar">
+
+                🎯
+                <br>
+                Centralizar
+
+            </button>
+
+            <button
+                class="btnAcao btnSalvar"
+                id="btnSalvar">
+
+                💾
+                <br>
+                Salvar
+
+            </button>
+
+            <button
+                class="btnAcao btnTela"
+                id="btnTela">
+
+                ⛶
+                <br>
+                Tela
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+"use strict";
+
+/* =========================================================
+ELEMENTOS
+========================================================= */
+
+const loadingScreen =
+    document.getElementById(
+        "loadingScreen"
+    );
+
+const loadingProgress =
+    document.getElementById(
+        "loadingProgress"
+    );
+
+const loadingStatus =
+    document.getElementById(
+        "loadingStatus"
+    );
+
+const game =
+    document.getElementById(
+        "game"
+    );
+
+const area =
+    document.getElementById(
+        "area"
+    );
+
+const viewport =
+    document.getElementById(
+        "viewport"
+    );
+
+const canvas =
+    document.getElementById(
+        "canvas"
+    );
+
+const ctx =
+    canvas.getContext(
+        "2d",
+        {
+            alpha:true
+        }
+    );
+
+const zoomInfo =
+    document.getElementById(
+        "zoomInfo"
+    );
+
+const zoomTop =
+    document.getElementById(
+        "zoomTop"
+    );
+
+const modoInfo =
+    document.getElementById(
+        "modoInfo"
+    );
+
+const toolStatus =
+    document.getElementById(
+        "toolStatus"
+    );
+
+const tamanhoInput =
+    document.getElementById(
+        "tamanho"
+    );
+
+const previewDot =
+    document.getElementById(
+        "previewDot"
+    );
+
+const bolinhaCorTop =
+    document.getElementById(
+        "bolinhaCorTop"
+    );
+
+const btnMover =
+    document.getElementById(
+        "btnMover"
+    );
+
+const btnPincel =
+    document.getElementById(
+        "btnPincel"
+    );
+
+const btnBorracha =
+    document.getElementById(
+        "btnBorracha"
+    );
+
+const btnBalde =
+    document.getElementById(
+        "btnBalde"
+    );
+
+const btnUndo =
+    document.getElementById(
+        "btnUndo"
+    );
+
+const btnLimpar =
+    document.getElementById(
+        "btnLimpar"
+    );
+
+const btnResetZoom =
+    document.getElementById(
+        "btnResetZoom"
+    );
+
+const btnCentralizar =
+    document.getElementById(
+        "btnCentralizar"
+    );
+
+const btnSalvar =
+    document.getElementById(
+        "btnSalvar"
+    );
+
+const btnTela =
+    document.getElementById(
+        "btnTela"
+    );
+
+
+/* =========================================================
+VARIÁVEIS
+========================================================= */
+
+let cor = "#000000";
+
+let tamanho = 8;
+
+let ferramenta = "pincel";
+
+let desenhando = false;
+
+let movendo = false;
+
+let ultimoX = 0;
+
+let ultimoY = 0;
+
+let inicioMovX = 0;
+
+let inicioMovY = 0;
+
+let translateInicialX = 0;
+
+let translateInicialY = 0;
+
+let zoom = 1;
+
+let translateX = 0;
+
+let translateY = 0;
+
+let pinchAtivo = false;
+
+let distanciaInicial = 0;
+
+let zoomInicial = 1;
+
+let historico = [];
+
+let indiceHistorico = -1;
+
+let canvasInicializado = false;
+
+
+/* =========================================================
+VIBRAÇÃO
+========================================================= */
+
+function vibrar(ms=8){
+
+    try{
+
+        if(navigator.vibrate){
+
+            navigator.vibrate(ms);
+
+        }
+
+    }catch(e){}
+
+}
+
+
+/* =========================================================
+SOM
+========================================================= */
+
+let audioContext = null;
+
+function som(
+    freq=500,
+    duracao=.05
+){
+
+    try{
+
+        if(!audioContext){
+
+            audioContext =
+                new (
+                    window.AudioContext ||
+                    window.webkitAudioContext
+                )();
+
+        }
+
+        const osc =
+            audioContext.createOscillator();
+
+        const gain =
+            audioContext.createGain();
+
+        osc.frequency.value =
+            freq;
+
+        osc.type =
+            "sine";
+
+        gain.gain.setValueAtTime(
+            .07,
+            audioContext.currentTime
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            audioContext.currentTime +
+            duracao
+        );
+
+        osc.connect(gain);
+
+        gain.connect(
+            audioContext.destination
+        );
+
+        osc.start();
+
+        osc.stop(
+            audioContext.currentTime +
+            duracao
+        );
+
+    }catch(e){}
+
+}
+
+
+/* =========================================================
+LOADING
+========================================================= */
+
+let progresso = 0;
+
+const mensagens = [
+
+    "Preparando ferramentas...",
+    "Carregando paleta...",
+    "Preparando pincel...",
+    "Preparando borracha...",
+    "Preparando balde de tinta...",
+    "Preparando ferramenta de movimento...",
+    "Configurando tela...",
+    "Quase pronto..."
+
+];
+
+let mensagemIndex = 0;
+
+const loadingInterval =
+    setInterval(
+        ()=>{
+
+            progresso +=
+                Math.random()*5 + 2;
+
+            if(progresso >= 100){
+
+                progresso = 100;
+
+                clearInterval(
+                    loadingInterval
+                );
+
+                loadingProgress.style.width =
+                    "100%";
+
+                loadingStatus.textContent =
+                    "MAEL66 PAINT pronto!";
+
+                setTimeout(
+                    iniciarJogo,
+                    600
+                );
+
+            }else{
+
+                loadingProgress.style.width =
+                    progresso + "%";
+
+                if(
+                    progresso >
+                    (mensagemIndex+1)*11
+                ){
+
+                    mensagemIndex =
+                        Math.min(
+                            mensagemIndex+1,
+                            mensagens.length-1
+                        );
+
+                    loadingStatus.textContent =
+                        mensagens[
+                            mensagemIndex
+                        ];
+
+                }
+
+            }
+
+        },
+        100
+    );
+
+
+/* =========================================================
+INICIAR
+========================================================= */
+
+function iniciarJogo(){
+
+    prepararCanvas();
+
+    game.classList.add(
+        "pronto"
+    );
+
+    loadingScreen.classList.add(
+        "esconder"
+    );
+
+}
+
+
+/* =========================================================
+PREPARAR CANVAS
+========================================================= */
+
+function prepararCanvas(){
+
+    const largura =
+        Math.max(
+            1,
+            Math.floor(
+                area.clientWidth
+            )
+        );
+
+    const altura =
+        Math.max(
+            1,
+            Math.floor(
+                area.clientHeight
+            )
+        );
+
+    canvas.width =
+        largura;
+
+    canvas.height =
+        altura;
+
+    ctx.setTransform(
+        1,0,0,1,0,0
+    );
+
+    ctx.fillStyle =
+        "#ffffff";
+
+    ctx.fillRect(
+        0,
+        0,
+        largura,
+        altura
+    );
+
+    canvasInicializado =
+        true;
+
+    historico = [];
+
+    indiceHistorico = -1;
+
+    salvarHistorico();
+
+    atualizarZoom();
+
+    atualizarPreview();
+
+}
+
+
+/* =========================================================
+HISTÓRICO
+========================================================= */
+
+function salvarHistorico(){
+
+    if(
+        !canvasInicializado
+    ){
+        return;
+    }
+
+    if(
+        indiceHistorico <
+        historico.length - 1
+    ){
+
+        historico =
+            historico.slice(
+                0,
+                indiceHistorico + 1
+            );
+
+    }
+
+    historico.push(
+        canvas.toDataURL(
+            "image/png"
+        )
+    );
+
+    if(
+        historico.length > 30
+    ){
+
+        historico.shift();
+
+    }
+
+    indiceHistorico =
+        historico.length - 1;
+
+}
+
+
+/* =========================================================
+DESFAZER
+========================================================= */
+
+function desfazer(){
+
+    if(
+        indiceHistorico <= 0
+    ){
+        return;
+    }
+
+    indiceHistorico--;
+
+    const imagem =
+        new Image();
+
+    imagem.onload =
+        ()=>{
+
+            ctx.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            ctx.drawImage(
+                imagem,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+        };
+
+    imagem.src =
+        historico[
+            indiceHistorico
+        ];
+
+    som(320,.06);
+
+    vibrar(10);
+
+}
+
+btnUndo.addEventListener(
+    "click",
+    desfazer
+);
+
+
+/* =========================================================
+PREVIEW
+========================================================= */
+
+function atualizarPreview(){
+
+    const tamanhoPreview =
+        Math.max(
+            4,
+            Math.min(
+                26,
+                tamanho / 2
+            )
+        );
+
+    previewDot.style.width =
+        tamanhoPreview + "px";
+
+    previewDot.style.height =
+        tamanhoPreview + "px";
+
+    previewDot.style.background =
+        ferramenta === "borracha"
+            ? "#fff"
+            : cor;
+
+}
+
+tamanhoInput.addEventListener(
+    "input",
+    ()=>{
+
+        tamanho =
+            Number(
+                tamanhoInput.value
+            );
+
+        atualizarPreview();
+
+        atualizarStatus();
+
+    }
+);
+
+
+/* =========================================================
+STATUS
+========================================================= */
+
+function atualizarStatus(){
+
+    let nome =
+        "Pincel";
+
+    if(
+        ferramenta === "mover"
+    ){
+        nome =
+            "Mover desenho";
+    }
+
+    if(
+        ferramenta === "borracha"
+    ){
+        nome =
+            "Borracha";
+    }
+
+    if(
+        ferramenta === "balde"
+    ){
+        nome =
+            "Balde de tinta";
+    }
+
+    if(
+        ferramenta === "mover"
+    ){
+
+        toolStatus.textContent =
+            nome +
+            " • arraste para mover";
+
+    }else{
+
+        toolStatus.textContent =
+            nome +
+            " • " +
+            tamanho +
+            " px";
+
+    }
+
+
+    if(
+        ferramenta === "mover"
+    ){
+
+        modoInfo.textContent =
+            "🖐️ MOVER DESENHO";
+
+    }else if(
+        ferramenta === "pincel"
+    ){
+
+        modoInfo.textContent =
+            "🖌️ PINCEL";
+
+    }else if(
+        ferramenta === "borracha"
+    ){
+
+        modoInfo.textContent =
+            "🧽 BORRACHA";
+
+    }else{
+
+        modoInfo.textContent =
+            "🪣 BALDE DE TINTA";
+
+    }
+
+}
+
+
+/* =========================================================
+SELECIONAR FERRAMENTA
+========================================================= */
+
+function selecionarFerramenta(
+    novaFerramenta
+){
+
+    ferramenta =
+        novaFerramenta;
+
+    btnMover.classList.remove(
+        "ativo"
+    );
+
+    btnPincel.classList.remove(
+        "ativo"
+    );
+
+    btnBorracha.classList.remove(
+        "ativo"
+    );
+
+    btnBalde.classList.remove(
+        "ativo"
+    );
+
+
+    if(
+        ferramenta === "mover"
+    ){
+
+        btnMover.classList.add(
+            "ativo"
+        );
+
+    }
+
+    if(
+        ferramenta === "pincel"
+    ){
+
+        btnPincel.classList.add(
+            "ativo"
+        );
+
+    }
+
+    if(
+        ferramenta === "borracha"
+    ){
+
+        btnBorracha.classList.add(
+            "ativo"
+        );
+
+    }
+
+    if(
+        ferramenta === "balde"
+    ){
+
+        btnBalde.classList.add(
+            "ativo"
+        );
+
+    }
+
+    atualizarPreview();
+
+    atualizarStatus();
+
+    vibrar(8);
+
+    som(
+        ferramenta === "balde"
+            ? 700
+            : ferramenta === "mover"
+                ? 550
+                : 450,
+        .05
+    );
+
+}
+
+
+btnMover.addEventListener(
+    "click",
+    ()=>{
+        selecionarFerramenta(
+            "mover"
+        );
+    }
+);
+
+btnPincel.addEventListener(
+    "click",
+    ()=>{
+        selecionarFerramenta(
+            "pincel"
+        );
+    }
+);
+
+btnBorracha.addEventListener(
+    "click",
+    ()=>{
+        selecionarFerramenta(
+            "borracha"
+        );
+    }
+);
+
+btnBalde.addEventListener(
+    "click",
+    ()=>{
+        selecionarFerramenta(
+            "balde"
+        );
+    }
+);
+
+
+/* =========================================================
+CORES
+========================================================= */
+
+document
+.querySelectorAll(".cor")
+.forEach(
+    botao=>{
+
+        botao.addEventListener(
+            "click",
+            ()=>{
+
+                cor =
+                    botao.dataset.cor;
+
+                document
+                .querySelectorAll(".cor")
+                .forEach(
+                    c=>{
+                        c.classList.remove(
+                            "selecionada"
+                        );
+                    }
+                );
+
+                botao.classList.add(
+                    "selecionada"
+                );
+
+                bolinhaCorTop.style.background =
+                    cor;
+
+                atualizarPreview();
+
+                som(600,.04);
+
+                vibrar(7);
+
+            }
+        );
+
+    }
+);
+
+
+/* =========================================================
+OBTER POSIÇÃO NO CANVAS
+========================================================= */
+
+function obterPosicao(
+    clientX,
+    clientY
+){
+
+    const rect =
+        area.getBoundingClientRect();
+
+    return {
+
+        x:
+            (
+                clientX -
+                rect.left -
+                translateX
+            ) / zoom,
+
+        y:
+            (
+                clientY -
+                rect.top -
+                translateY
+            ) / zoom
+
+    };
+
+}
+
+
+/* =========================================================
+DESENHO
+========================================================= */
+
+function iniciarDesenho(
+    x,
+    y
+){
+
+    if(
+        ferramenta === "mover"
+    ){
+
+        movendo = true;
+
+        inicioMovX = x;
+
+        inicioMovY = y;
+
+        return;
+
+    }
+
+
+    if(
+        ferramenta === "balde"
+    ){
+
+        preencherArea(
+            Math.floor(x),
+            Math.floor(y)
+        );
+
+        return;
+
+    }
+
+
+    desenhando = true;
+
+    ultimoX = x;
+
+    ultimoY = y;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x,
+        y
+    );
+
+    ctx.lineCap =
+        "round";
+
+    ctx.lineJoin =
+        "round";
+
+    ctx.lineWidth =
+        tamanho;
+
+    ctx.strokeStyle =
+        ferramenta === "borracha"
+            ? "#ffffff"
+            : cor;
+
+    ctx.lineTo(
+        x+.01,
+        y+.01
+    );
+
+    ctx.stroke();
+
+}
+
+
+function continuarDesenho(
+    x,
+    y
+){
+
+    if(
+        ferramenta === "mover"
+    ){
+
+        if(!movendo){
+            return;
+        }
+
+        const dx =
+            x - inicioMovX;
+
+        const dy =
+            y - inicioMovY;
+
+        translateX =
+            translateInicialX +
+            dx * zoom;
+
+        translateY =
+            translateInicialY +
+            dy * zoom;
+
+        atualizarZoom();
+
+        return;
+
+    }
+
+
+    if(
+        !desenhando
+    ){
+        return;
+    }
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        ultimoX,
+        ultimoY
+    );
+
+    ctx.lineTo(
+        x,
+        y
+    );
+
+    ctx.lineCap =
+        "round";
+
+    ctx.lineJoin =
+        "round";
+
+    ctx.lineWidth =
+        tamanho;
+
+    ctx.strokeStyle =
+        ferramenta === "borracha"
+            ? "#ffffff"
+            : cor;
+
+    ctx.stroke();
+
+    ultimoX = x;
+
+    ultimoY = y;
+
+}
+
+
+function terminarDesenho(){
+
+    if(
+        desenhando
+    ){
+
+        desenhando = false;
+
+        ctx.closePath();
+
+        salvarHistorico();
+
+    }
+
+
+    if(
+        movendo
+    ){
+
+        movendo = false;
+
+        som(350,.04);
+
+    }
+
+}
+
+
+/* =========================================================
+MOUSE
+========================================================= */
+
+canvas.addEventListener(
+    "mousedown",
+    e=>{
+
+        if(
+            e.button !== 0
+        ){
+            return;
+        }
+
+        const p =
+            obterPosicao(
+                e.clientX,
+                e.clientY
+            );
+
+        if(
+            ferramenta === "mover"
+        ){
+
+            inicioMovX = p.x;
+
+            inicioMovY = p.y;
+
+            translateInicialX =
+                translateX;
+
+            translateInicialY =
+                translateY;
+
+        }
+
+        iniciarDesenho(
+            p.x,
+            p.y
+        );
+
+    }
+);
+
+
+canvas.addEventListener(
+    "mousemove",
+    e=>{
+
+        if(
+            ferramenta === "balde"
+        ){
+            return;
+        }
+
+        if(
+            !desenhando &&
+            !movendo
+        ){
+            return;
+        }
+
+        const p =
+            obterPosicao(
+                e.clientX,
+                e.clientY
+            );
+
+        continuarDesenho(
+            p.x,
+            p.y
+        );
+
+    }
+);
+
+
+window.addEventListener(
+    "mouseup",
+    terminarDesenho
+);
+
+
+/* =========================================================
+TOUCH
+========================================================= */
+
+canvas.addEventListener(
+    "touchstart",
+    e=>{
+
+        if(
+            e.touches.length === 2
+        ){
+
+            pinchAtivo = true;
+
+            distanciaInicial =
+                distancia(
+                    e.touches[0],
+                    e.touches[1]
+                );
+
+            zoomInicial =
+                zoom;
+
+            desenhando = false;
+
+            movendo = false;
+
+            e.preventDefault();
+
+            return;
+
+        }
+
+
+        if(
+            e.touches.length !== 1
+        ){
+            return;
+        }
+
+
+        const toque =
+            e.touches[0];
+
+        const p =
+            obterPosicao(
+                toque.clientX,
+                toque.clientY
+            );
+
+
+        if(
+            ferramenta === "mover"
+        ){
+
+            inicioMovX = p.x;
+
+            inicioMovY = p.y;
+
+            translateInicialX =
+                translateX;
+
+            translateInicialY =
+                translateY;
+
+        }
+
+
+        iniciarDesenho(
+            p.x,
+            p.y
+        );
+
+        e.preventDefault();
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+canvas.addEventListener(
+    "touchmove",
+    e=>{
+
+        if(
+            e.touches.length === 2
+        ){
+
+            const atual =
+                distancia(
+                    e.touches[0],
+                    e.touches[1]
+                );
+
+            if(
+                distanciaInicial > 0
+            ){
+
+                const fator =
+                    atual /
+                    distanciaInicial;
+
+                zoom =
+                    Math.max(
+                        1,
+                        Math.min(
+                            4,
+                            zoomInicial *
+                            fator
+                        )
+                    );
+
+                atualizarZoom();
+
+            }
+
+            e.preventDefault();
+
+            return;
+
+        }
+
+
+        if(
+            e.touches.length !== 1
+        ){
+            return;
+        }
+
+
+        const toque =
+            e.touches[0];
+
+        const p =
+            obterPosicao(
+                toque.clientX,
+                toque.clientY
+            );
+
+
+        if(
+            ferramenta === "balde"
+        ){
+
+            e.preventDefault();
+
+            return;
+
+        }
+
+
+        continuarDesenho(
+            p.x,
+            p.y
+        );
+
+        e.preventDefault();
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+canvas.addEventListener(
+    "touchend",
+    e=>{
+
+        if(
+            e.touches.length < 2
+        ){
+
+            pinchAtivo = false;
+
+        }
+
+        if(
+            e.touches.length === 0
+        ){
+
+            terminarDesenho();
+
+        }
+
+        e.preventDefault();
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+/* =========================================================
+BALDE DE TINTA
+========================================================= */
+
+function preencherArea(
+    inicioX,
+    inicioY
+){
+
+    if(
+        inicioX < 0 ||
+        inicioY < 0 ||
+        inicioX >= canvas.width ||
+        inicioY >= canvas.height
+    ){
+        return;
+    }
+
+
+    const imagem =
+        ctx.getImageData(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+    const dados =
+        imagem.data;
+
+    const largura =
+        canvas.width;
+
+    const altura =
+        canvas.height;
+
+    const indice =
+        (
+            inicioY *
+            largura +
+            inicioX
+        ) * 4;
+
+
+    const alvoR =
+        dados[indice];
+
+    const alvoG =
+        dados[indice+1];
+
+    const alvoB =
+        dados[indice+2];
+
+    const alvoA =
+        dados[indice+3];
+
+
+    const novaCor =
+        hexParaRGB(cor);
+
+
+    if(
+        coresIguais(
+            alvoR,
+            alvoG,
+            alvoB,
+            alvoA,
+            novaCor.r,
+            novaCor.g,
+            novaCor.b,
+            255
+        )
+    ){
+
+        return;
+
+    }
+
+
+    const tolerancia = 20;
+
+    const fila = [];
+
+    fila.push([
+        inicioX,
+        inicioY
+    ]);
+
+
+    const visitados =
+        new Uint8Array(
+            largura *
+            altura
+        );
+
+
+    while(
+        fila.length
+    ){
+
+        const atual =
+            fila.pop();
+
+        const x =
+            atual[0];
+
+        const y =
+            atual[1];
+
+
+        if(
+            x < 0 ||
+            y < 0 ||
+            x >= largura ||
+            y >= altura
+        ){
+            continue;
+        }
+
+
+        const pos =
+            y *
+            largura +
+            x;
+
+
+        if(
+            visitados[pos]
+        ){
+            continue;
+        }
+
+
+        visitados[pos] = 1;
+
+
+        const i =
+            pos * 4;
+
+
+        const r =
+            dados[i];
+
+        const g =
+            dados[i+1];
+
+        const b =
+            dados[i+2];
+
+        const a =
+            dados[i+3];
+
+
+        if(
+            !pixelDentroDaTolerancia(
+                r,g,b,a,
+                alvoR,
+                alvoG,
+                alvoB,
+                alvoA,
+                tolerancia
+            )
+        ){
+
+            continue;
+
+        }
+
+
+        dados[i] =
+            novaCor.r;
+
+        dados[i+1] =
+            novaCor.g;
+
+        dados[i+2] =
+            novaCor.b;
+
+        dados[i+3] =
+            255;
+
+
+        fila.push([
+            x+1,
+            y
+        ]);
+
+        fila.push([
+            x-1,
+            y
+        ]);
+
+        fila.push([
+            x,
+            y+1
+        ]);
+
+        fila.push([
+            x,
+            y-1
+        ]);
+
+    }
+
+
+    ctx.putImageData(
+        imagem,
+        0,
+        0
+    );
+
+
+    salvarHistorico();
+
+    som(750,.12);
+
+    vibrar(15);
+
+}
+
+
+/* =========================================================
+HEX
+========================================================= */
+
+function hexParaRGB(
+    hex
+){
+
+    hex =
+        hex.replace(
+            "#",
+            ""
+        );
+
+    return {
+
+        r:
+            parseInt(
+                hex.substring(0,2),
+                16
+            ),
+
+        g:
+            parseInt(
+                hex.substring(2,4),
+                16
+            ),
+
+        b:
+            parseInt(
+                hex.substring(4,6),
+                16
+            )
+
+    };
+
+}
+
+
+/* =========================================================
+COMPARAÇÃO
+========================================================= */
+
+function coresIguais(
+    r1,g1,b1,a1,
+    r2,g2,b2,a2
+){
+
+    return(
+        r1 === r2 &&
+        g1 === g2 &&
+        b1 === b2 &&
+        a1 === a2
+    );
+
+}
+
+
+function pixelDentroDaTolerancia(
+    r,g,b,a,
+    tr,tg,tb,ta,
+    tolerancia
+){
+
+    return(
+        Math.abs(r-tr) <= tolerancia &&
+        Math.abs(g-tg) <= tolerancia &&
+        Math.abs(b-tb) <= tolerancia &&
+        Math.abs(a-ta) <= tolerancia
+    );
+
+}
+
+
+/* =========================================================
+LIMPAR
+========================================================= */
+
+btnLimpar.addEventListener(
+    "click",
+    ()=>{
+
+        if(
+            !confirm(
+                "Deseja apagar todo o desenho?"
+            )
+        ){
+            return;
+        }
+
+
+        ctx.setTransform(
+            1,0,0,1,0,0
+        );
+
+        ctx.fillStyle =
+            "#ffffff";
+
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+
+        salvarHistorico();
+
+        som(250,.1);
+
+        vibrar(15);
+
+    }
+);
+
+
+/* =========================================================
+ZOOM
+========================================================= */
+
+function atualizarZoom(){
+
+    viewport.style.transform =
+        `translate(${translateX}px,${translateY}px) scale(${zoom})`;
+
+    const texto =
+        Math.round(
+            zoom * 100
+        ) + "%";
+
+    zoomInfo.textContent =
+        "ZOOM: " + texto;
+
+    zoomTop.textContent =
+        texto;
+
+}
+
+
+btnResetZoom.addEventListener(
+    "click",
+    ()=>{
+
+        zoom = 1;
+
+        translateX = 0;
+
+        translateY = 0;
+
+        atualizarZoom();
+
+        som(500,.05);
+
+        vibrar(8);
+
+    }
+);
+
+
+/* =========================================================
+CENTRALIZAR DESENHO
+========================================================= */
+
+btnCentralizar.addEventListener(
+    "click",
+    ()=>{
+
+        translateX = 0;
+
+        translateY = 0;
+
+        atualizarZoom();
+
+        som(600,.06);
+
+        vibrar(10);
+
+    }
+);
+
+
+/* =========================================================
+DISTÂNCIA DOS DEDOS
+========================================================= */
+
+function distancia(
+    a,
+    b
+){
+
+    const dx =
+        a.clientX -
+        b.clientX;
+
+    const dy =
+        a.clientY -
+        b.clientY;
+
+    return Math.sqrt(
+        dx*dx +
+        dy*dy
+    );
+
+}
+
+
+/* =========================================================
+SALVAR
+========================================================= */
+
+btnSalvar.addEventListener(
+    "click",
+    ()=>{
+
+        const imagem =
+            document.createElement(
+                "canvas"
+            );
+
+        imagem.width =
+            canvas.width;
+
+        imagem.height =
+            canvas.height;
+
+        const c =
+            imagem.getContext(
+                "2d"
+            );
+
+        c.fillStyle =
+            "#fff";
+
+        c.fillRect(
+            0,
+            0,
+            imagem.width,
+            imagem.height
+        );
+
+        c.drawImage(
+            canvas,
+            0,
+            0
+        );
+
+
+        const link =
+            document.createElement(
+                "a"
+            );
+
+        link.download =
+            "MAEL66-PAINT-" +
+            Date.now() +
+            ".png";
+
+        link.href =
+            imagem.toDataURL(
+                "image/png"
+            );
+
+
+        document.body.appendChild(
+            link
+        );
+
+        link.click();
+
+        link.remove();
+
+        som(900,.1);
+
+        vibrar(20);
+
+    }
+);
+
+
+/* =========================================================
+TELA CHEIA
+========================================================= */
+
+async function telaCheia(){
+
+    try{
+
+        if(
+            document.fullscreenElement
+        ){
+
+            await document.exitFullscreen();
+
+        }else{
+
+            await document
+                .documentElement
+                .requestFullscreen();
+
+        }
+
+    }catch(e){
+
+        document.body.classList.toggle(
+            "modoTelaCheia"
+        );
+
+    }
+
+    vibrar(10);
+
+}
+
+
+btnTela.addEventListener(
+    "click",
+    telaCheia
+);
+
+
+document.addEventListener(
+    "fullscreenchange",
+    ()=>{
+
+        if(
+            !document.fullscreenElement
+        ){
+
+            document.body.classList.remove(
+                "modoTelaCheia"
+            );
+
+        }
+
+        setTimeout(
+            redimensionarCanvas,
+            150
+        );
+
+    }
+);
+
+
+/* =========================================================
+REDIMENSIONAR
+========================================================= */
+
+function redimensionarCanvas(){
+
+    if(
+        !canvasInicializado
+    ){
+        return;
+    }
+
+
+    const antigo =
+        document.createElement(
+            "canvas"
+        );
+
+    antigo.width =
+        canvas.width;
+
+    antigo.height =
+        canvas.height;
+
+    const antigoCtx =
+        antigo.getContext(
+            "2d"
+        );
+
+    antigoCtx.drawImage(
+        canvas,
+        0,
+        0
+    );
+
+
+    const largura =
+        Math.max(
+            1,
+            area.clientWidth
+        );
+
+    const altura =
+        Math.max(
+            1,
+            area.clientHeight
+        );
+
+
+    canvas.width =
+        largura;
+
+    canvas.height =
+        altura;
+
+
+    ctx.fillStyle =
+        "#ffffff";
+
+    ctx.fillRect(
+        0,
+        0,
+        largura,
+        altura
+    );
+
+
+    ctx.drawImage(
+        antigo,
+        0,
+        0,
+        antigo.width,
+        antigo.height,
+        0,
+        0,
+        largura,
+        altura
+    );
+
+
+    atualizarZoom();
+
+}
+
+
+/* =========================================================
+GESTOS
+========================================================= */
+
+document.addEventListener(
+    "gesturestart",
+    e=>{
+        e.preventDefault();
+    }
+);
+
+document.addEventListener(
+    "gesturechange",
+    e=>{
+        e.preventDefault();
+    }
+);
+
+document.addEventListener(
+    "gestureend",
+    e=>{
+        e.preventDefault();
+    }
+);
+
+document.addEventListener(
+    "contextmenu",
+    e=>{
+        e.preventDefault();
+    }
+);
+
+
+/* =========================================================
+RESIZE
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+        setTimeout(
+            redimensionarCanvas,
+            150
+        );
+    }
+);
+
+
+/* =========================================================
+TECLADO
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    e=>{
+
+        if(
+            e.ctrlKey &&
+            e.key.toLowerCase() === "z"
+        ){
+
+            e.preventDefault();
+
+            desfazer();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+INICIAL
+========================================================= */
+
+bolinhaCorTop.style.background =
+    cor;
+
+atualizarPreview();
+
+atualizarStatus();
+
+</script>
+
+</body>
+</html>

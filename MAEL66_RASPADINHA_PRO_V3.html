@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<title>MAEL66 RASPADINHA PRO</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;font-family:Arial,sans-serif;background:#030603;color:#fff}
+body{overflow-x:hidden}
+button,input{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+/* LOADING */
+#loading{position:fixed;inset:0;z-index:999;background:radial-gradient(circle at 50% 35%,#173c0f,#030603 68%);display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}
+.loadBox{width:min(390px,100%)}
+.loadImg{width:210px;height:210px;object-fit:cover;border-radius:30px;border:3px solid #8dff21;box-shadow:0 0 35px #39ff14aa;animation:loadPulse 1.5s infinite}
+@keyframes loadPulse{50%{transform:scale(1.04);box-shadow:0 0 60px #39ff14}}
+.loadTitle{font-size:30px;font-weight:1000;color:#a0ff2b;text-shadow:0 0 15px #39ff14;margin:18px 0 4px}
+.loadSub{color:#ddd}
+.progress{height:10px;background:#111;border:1px solid #6fe82b;border-radius:20px;overflow:hidden;margin-top:22px}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#39ff14,#e7ff3d);box-shadow:0 0 15px #39ff14;transition:width .15s}
+#loadPct{font-size:12px;color:#baff7b;margin-top:7px}
+
+/* APP */
+.app{width:min(500px,100%);margin:auto;padding:10px 12px 25px}
+.header{text-align:center}
+.logo{font-size:28px;font-weight:1000;color:#9cff28;text-shadow:0 0 12px #39ff14}
+.sub{font-size:11px;color:#aaa;letter-spacing:2px}
+.userbar{display:flex;gap:8px;align-items:center;margin:12px 0;padding:9px;border:1px solid #376e1c;border-radius:15px;background:#0d170c}
+.avatar{width:40px;height:40px;border-radius:50%;background:#162610;border:2px solid #82ff24;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.userinfo{flex:1;text-align:left}.username{font-weight:900}.online{font-size:11px;color:#78ff22}
+.userbar button{width:auto;margin:0;padding:8px 10px;font-size:12px;border-radius:10px;background:#1a2816;color:#fff;border:1px solid #4f8e2c;box-shadow:none}
+.balance{padding:12px;border-radius:16px;text-align:center;background:linear-gradient(145deg,#182816,#080d08);border:2px solid #83ef25;box-shadow:0 0 20px #39ff142b}
+.balance span{display:block;font-size:11px;color:#bbb}.balance b{font-size:27px;color:#ffe14a}
+.ticket{margin-top:12px;padding:14px;border-radius:24px;border:3px solid #b7ff38;background:radial-gradient(circle at 50% 0,#28551b,#091108 58%);box-shadow:0 0 28px #39ff1438,inset 0 0 20px #000}
+.top{display:flex;justify-content:space-between;font-size:11px;color:#d8ffa9;margin-bottom:8px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cell{height:108px;position:relative;overflow:hidden;border:2px solid #9cf436;border-radius:15px;background:linear-gradient(145deg,#111,#1c2719);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 15px #000;transition:.25s}
+.symbol{font-size:38px}.value{position:absolute;bottom:5px;background:#000b;color:#ffe66b;padding:3px 6px;border-radius:7px;font-size:11px;font-weight:900}
+.cover{position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:pointer;background:radial-gradient(circle,#eee 0 4%,transparent 5%),linear-gradient(135deg,#707070,#d6d6d6,#777,#d0d0d0,#666);background-size:12px 12px,100% 100%}
+.cover:before{content:"66";font-size:31px;font-weight:1000;color:#fff;text-shadow:0 2px 3px #333}
+.cover:after{content:"RASPE";position:absolute;bottom:10px;font-size:10px;font-weight:900;color:#333;letter-spacing:2px}
+.cell.scratched .cover{animation:reveal .3s forwards}
+@keyframes reveal{to{opacity:0;transform:scale(1.12);visibility:hidden}}
+.cell.win{animation:win .7s infinite;border-color:#ffe333;z-index:4}
+@keyframes win{50%{transform:scale(1.07);box-shadow:0 0 30px #ffe100,0 0 55px #39ff14}}
+.instructions{text-align:center;font-size:13px;color:#ddd;margin:10px 0}
+.result{text-align:center;min-height:34px;margin-top:10px;font-weight:1000;font-size:18px}
+.result.win{color:#ffe13b;text-shadow:0 0 14px #ffc400}
+.mainBtn{width:100%;border:0;border-radius:15px;padding:15px;margin-top:9px;font-weight:1000;font-size:18px;background:linear-gradient(#a4ff38,#45c900);color:#071000;box-shadow:0 4px 0 #237500,0 0 18px #39ff1455}
+.mainBtn:active{transform:translateY(3px)}
+.mainBtn:disabled{opacity:.45}
+.sound{position:fixed;right:10px;top:10px;width:42px;height:42px;border-radius:50%;border:1px solid #6edb29;background:#111d0e;color:#fff;z-index:100;padding:0}
+
+/* AUTH */
+#auth{position:fixed;inset:0;z-index:200;background:radial-gradient(circle at top,#1d4814,#030603 65%);display:flex;align-items:center;justify-content:center;padding:18px}
+.authBox{width:min(410px,100%);padding:22px;border:2px solid #8cff28;border-radius:24px;background:#091008;box-shadow:0 0 35px #39ff1455}
+.authLogo{text-align:center;font-size:27px;font-weight:1000;color:#9cff28;margin-bottom:14px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px}
+.tabs button{border:1px solid #477a2a;background:#101910;color:#bbb;border-radius:10px;padding:10px}
+.tabs button.active{background:#67dd1b;color:#071000;font-weight:900}
+.authBox input{width:100%;padding:13px;margin:5px 0;border-radius:11px;border:1px solid #4d762e;background:#111811;color:#fff;outline:none}
+.authBox input:focus{border-color:#9cff28;box-shadow:0 0 8px #39ff1455}
+.authBtn{width:100%;padding:14px;margin-top:10px;border:0;border-radius:12px;background:linear-gradient(#a4ff38,#45c900);font-weight:1000;color:#071000}
+.authMsg{text-align:center;min-height:20px;color:#ffdd55;font-size:13px;margin-top:8px}
+.demo{text-align:center;color:#777;font-size:10px;margin-top:12px}
+
+/* MODAL */
+.modal{position:fixed;inset:0;z-index:150;background:#000c;display:flex;align-items:center;justify-content:center;padding:20px}
+.modalBox{width:min(390px,100%);text-align:center;padding:25px;border:3px solid #ffe13b;border-radius:25px;background:radial-gradient(circle at top,#315d18,#080d07);box-shadow:0 0 45px #ffe10088;animation:modalIn .35s}
+@keyframes modalIn{from{transform:scale(.6)}to{transform:scale(1)}}
+.trophy{font-size:62px}.modal h2{color:#ffe13b;font-size:29px;margin:5px}.prize{font-size:42px;color:#72ff24;font-weight:1000;text-shadow:0 0 18px #39ff14}.modal p{color:#ddd}
+.modal button{width:100%;padding:13px;border:0;border-radius:12px;background:#8df52c;font-weight:1000}
+canvas{position:fixed;inset:0;z-index:160;pointer-events:none}
+.small{text-align:center;color:#777;font-size:10px;margin-top:9px}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="loadBox">
+    <img class="loadImg" src="https://i.imgur.com/Z08xvCT.png" alt="MAEL66">
+    <div class="loadTitle">MAEL66 RASPADINHA</div>
+    <div class="loadSub">Preparando seu jogo...</div>
+    <div class="progress"><i id="bar"></i></div>
+    <div id="loadPct">0%</div>
+  </div>
+</div>
+
+<div id="auth" class="hidden">
+  <div class="authBox">
+    <div class="authLogo">👑 MAEL66 RASPADINHA</div>
+    <div class="tabs">
+      <button id="tabLogin" class="active">ENTRAR</button>
+      <button id="tabReg">CRIAR CONTA</button>
+    </div>
+    <div id="loginForm">
+      <input id="loginUser" placeholder="Usuário" autocomplete="username">
+      <input id="loginPass" type="password" placeholder="Senha" autocomplete="current-password">
+      <button class="authBtn" id="loginBtn">🔐 ENTRAR NO JOGO</button>
+    </div>
+    <div id="regForm" class="hidden">
+      <input id="regUser" placeholder="Crie seu usuário" maxlength="20">
+      <input id="regPass" type="password" placeholder="Crie uma senha" minlength="4">
+      <input id="regPass2" type="password" placeholder="Confirme a senha">
+      <button class="authBtn" id="regBtn">✨ CRIAR CONTA</button>
+    </div>
+    <div class="authMsg" id="authMsg"></div>
+    <div class="demo">Conta e saldo ficam salvos somente neste navegador.</div>
+  </div>
+</div>
+
+<div id="game" class="app hidden">
+  <button class="sound" id="sound">🔊</button>
+  <div class="header">
+    <div class="logo">🎫 MAEL66 RASPADINHA</div>
+    <div class="sub">RASPE • COMBINE • GANHE</div>
+  </div>
+
+  <div class="userbar">
+    <div class="avatar" id="avatar">👤</div>
+    <div class="userinfo"><div class="username" id="playerName">Jogador</div><div class="online">● ONLINE</div></div>
+    <button id="logout">SAIR</button>
+  </div>
+
+  <div class="balance"><span>SEU SALDO</span><b id="balance">0</b> moedas</div>
+
+  <div class="ticket">
+    <div class="top"><span>🎟️ RASPADINHA PRO</span><span>9 ÁREAS</span></div>
+    <div class="instructions">Encontre <b>3 imagens iguais</b> e ganhe a soma dos 3 valores.</div>
+    <div class="grid" id="grid"></div>
+    <div class="result" id="result">Boa sorte! 🍀</div>
+    <button class="mainBtn" id="newTicket">🎫 NOVA RASPADINHA — 1 MOEDA</button>
+    <div class="small">Modo demonstração — moedas sem valor monetário.</div>
+  </div>
+</div>
+
+<div class="modal hidden" id="winModal">
+  <div class="modalBox">
+    <div class="trophy">🏆</div>
+    <h2>VOCÊ GANHOU!</h2>
+    <div class="prize">+<span id="prize">0</span></div>
+    <p id="detail">Três imagens iguais!</p>
+    <button id="continue">🎉 CONTINUAR</button>
+  </div>
+</div>
+<canvas id="confetti"></canvas>
+
+<script>
+const LOADING_IMG="https://i.imgur.com/Z08xvCT.png";
+const symbols=[
+ ["🍒","Cerejas"],["🍋","Limão"],["🍉","Melancia"],["⭐","Estrela"],
+ ["💎","Diamante"],["🍀","Trevo"],["🔔","Sino"],["7️⃣","Sete"],["👑","Coroa"]
+];
+const values=[2,5,10,20,30,35,40,45,50];
+let soundOn=true,currentUser=null,round=[],scratched=0;
+
+const $=id=>document.getElementById(id);
+function users(){return JSON.parse(localStorage.getItem("mael66_rasp_users")||"{}")}
+function saveUsers(u){localStorage.setItem("mael66_rasp_users",JSON.stringify(u))}
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function userKey(){return "mael66_rasp_data_"+currentUser}
+function getData(){return JSON.parse(localStorage.getItem(userKey())||'{"saldo":100}')}
+function saveData(d){localStorage.setItem(userKey(),JSON.stringify(d));$("balance").textContent=d.saldo}
+function msg(t){$("authMsg").textContent=t}
+
+function showAuth(){ $("auth").classList.remove("hidden"); $("game").classList.add("hidden") }
+function showGame(){
+ $("auth").classList.add("hidden");$("game").classList.remove("hidden");
+ $("playerName").textContent=currentUser;
+ const d=getData();$("balance").textContent=d.saldo;
+ newTicket();
+}
+$("tabLogin").onclick=()=>{ $("tabLogin").classList.add("active");$("tabReg").classList.remove("active");$("loginForm").classList.remove("hidden");$("regForm").classList.add("hidden");msg("")}
+$("tabReg").onclick=()=>{ $("tabReg").classList.add("active");$("tabLogin").classList.remove("active");$("regForm").classList.remove("hidden");$("loginForm").classList.add("hidden");msg("")}
+
+$("regBtn").onclick=()=>{
+ let u=$("regUser").value.trim().toLowerCase(),p=$("regPass").value,p2=$("regPass2").value,all=users();
+ if(u.length<3)return msg("O usuário precisa ter pelo menos 3 caracteres.");
+ if(p.length<4)return msg("A senha precisa ter pelo menos 4 caracteres.");
+ if(p!==p2)return msg("As senhas não são iguais.");
+ if(all[u])return msg("Esse usuário já existe.");
+ all[u]={senha:p};saveUsers(all);
+ currentUser=u;localStorage.setItem("mael66_rasp_session",u);saveData({saldo:100});showGame();
+}
+$("loginBtn").onclick=()=>{
+ let u=$("loginUser").value.trim().toLowerCase(),p=$("loginPass").value,all=users();
+ if(!all[u]||all[u].senha!==p)return msg("Usuário ou senha incorretos.");
+ currentUser=u;localStorage.setItem("mael66_rasp_session",u);showGame();
+}
+$("logout").onclick=()=>{localStorage.removeItem("mael66_rasp_session");currentUser=null;showAuth()}
+
+let audio;
+function tone(f,d=.1,type="sine",g=.035,delay=0){
+ if(!soundOn)return;
+ try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();audio.resume();
+ const o=audio.createOscillator(),v=audio.createGain();o.type=type;o.frequency.value=f;
+ v.gain.setValueAtTime(0,audio.currentTime+delay);v.gain.linearRampToValueAtTime(g,audio.currentTime+delay+.01);v.gain.exponentialRampToValueAtTime(.001,audio.currentTime+delay+d);
+ o.connect(v);v.connect(audio.destination);o.start(audio.currentTime+delay);o.stop(audio.currentTime+delay+d+.02)}catch(e){}
+}
+$("sound").onclick=()=>{soundOn=!soundOn;$("sound").textContent=soundOn?"🔊":"🔇";if(soundOn)tone(700,.1)}
+
+function newTicket(){
+ let d=getData();
+ if(d.saldo<1){$("result").textContent="💰 Saldo insuficiente.";return}
+ d.saldo--;saveData(d);scratched=0;$("newTicket").disabled=true;$("result").className="result";$("result").textContent="Raspe todas as áreas!";
+ let base;
+ if(Math.random()<.58){
+  const s=symbols[Math.floor(Math.random()*symbols.length)];
+  base=[s,s,s];while(base.length<9)base.push(symbols[Math.floor(Math.random()*symbols.length)]);
+ }else base=Array.from({length:9},()=>symbols[Math.floor(Math.random()*symbols.length)]);
+ round=shuffle(base);
+ const vals=shuffle([...values]);
+ const grid=$("grid");grid.innerHTML="";
+ round.forEach((s,i)=>{
+  const c=document.createElement("div");c.className="cell";c.dataset.symbol=s[1];c.dataset.value=vals[i];
+  c.innerHTML=`<div class="symbol">${s[0]}</div><div class="value">${vals[i]} MOEDAS</div><div class="cover"></div>`;
+  const cover=c.querySelector(".cover");
+  cover.onpointerdown=e=>{
+   e.preventDefault();if(c.dataset.done)return;c.dataset.done="1";c.classList.add("scratched");scratched++;tone(90,.04,"sawtooth",.012);
+   if(scratched===9)setTimeout(finish,350);
+  };
+  grid.appendChild(c);
+ });
+}
+
+function finish(){
+ const cells=[...document.querySelectorAll(".cell")],groups={};
+ cells.forEach(c=>(groups[c.dataset.symbol]??=[]).push(c));
+ let prize=0,details=[];
+ for(const n in groups)if(groups[n].length>=3){
+  const three=groups[n].slice(0,3),sum=three.reduce((a,c)=>a+Number(c.dataset.value),0);
+  prize+=sum;details.push({n,sum,three});
+ }
+ const btn=$("newTicket");
+ if(prize){
+  let d=getData();d.saldo+=prize;saveData(d);
+  details.forEach(x=>x.three.forEach(c=>c.classList.add("win")));
+  $("result").className="result win";$("result").textContent="🎉 COMBINAÇÃO PREMIADA!";
+  $("prize").textContent=prize;$("detail").textContent=details.map(x=>`${x.n}: 3 iguais = ${x.sum} moedas`).join(" • ");
+  $("winModal").classList.remove("hidden");winSound();confetti();
+ }else{$("result").textContent="😔 Não apareceu 3 imagens iguais.";btn.disabled=false;tone(120,.25,"sawtooth",.03)}
+}
+function winSound(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,.2,"sine",.05,i*.12))}
+$("newTicket").onclick=newTicket;
+$("continue").onclick=()=>{$("winModal").classList.add("hidden");$("newTicket").disabled=false};
+
+const cv=$("confetti"),cx=cv.getContext("2d");let ps=[];
+function confetti(){cv.width=innerWidth;cv.height=innerHeight;ps=Array.from({length:130},()=>({x:Math.random()*cv.width,y:-20,vy:2+Math.random()*5,vx:(Math.random()-.5)*7,s:5+Math.random()*8,r:Math.random()*6.28,vr:(Math.random()-.5)*.3}));draw()}
+function draw(){cx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.04;p.r+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.font=p.s*2+"px Arial";cx.fillStyle=`hsl(${Math.random()*360},100%,60%)`;cx.fillText("★",0,0);cx.restore()});ps=ps.filter(p=>p.y<cv.height+20);if(ps.length)requestAnimationFrame(draw)}
+
+let pct=0;const timer=setInterval(()=>{pct+=Math.floor(Math.random()*8)+4;if(pct>100)pct=100;$("bar").style.width=pct+"%";$("loadPct").textContent=pct+"%";if(pct>=100){clearInterval(timer);setTimeout(()=>{ $("loading").classList.add("hidden");const s=localStorage.getItem("mael66_rasp_session");if(s&&users()[s]){currentUser=s;showGame()}else showAuth()},450)}},120);
+</script>
+</body>
+</html>

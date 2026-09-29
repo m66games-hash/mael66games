@@ -1,0 +1,3659 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no,
+viewport-fit=cover">
+
+<meta name="theme-color" content="#050505">
+
+<title>MAEL66 JOGO DA MEMÓRIA</title>
+
+<style>
+
+/* ==================================================
+   RESET
+================================================== */
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100%;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#050505;
+    color:#fff;
+    overflow-x:hidden;
+}
+
+body{
+
+    background-image:
+    linear-gradient(
+        rgba(0,0,0,.55),
+        rgba(0,0,0,.78)
+    ),
+    url("https://i.imgur.com/XZUvRij.png");
+
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
+
+
+/* ==================================================
+   LOADING
+================================================== */
+
+#loadingScreen{
+
+    position:fixed;
+    inset:0;
+    z-index:99999;
+
+    display:flex;
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:center;
+
+    background:#020202;
+
+    padding:20px;
+
+}
+
+.loadingLogo{
+
+    width:min(70vw,320px);
+    height:220px;
+
+    object-fit:contain;
+
+    filter:
+    drop-shadow(0 0 8px #39ff14)
+    drop-shadow(0 0 18px #39ff14);
+
+    animation:
+    loadingPulse 1.2s infinite;
+
+}
+
+@keyframes loadingPulse{
+
+    0%,100%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.06);
+    }
+
+}
+
+.loadingTitle{
+
+    color:#39ff14;
+
+    font-size:
+    clamp(18px,6vw,28px);
+
+    font-weight:900;
+
+    text-align:center;
+
+    text-shadow:
+    0 0 8px #39ff14,
+    0 0 18px #39ff14;
+
+    margin-top:10px;
+
+}
+
+.loadingStatus{
+
+    margin-top:12px;
+
+    font-size:14px;
+
+    color:#ddd;
+
+    text-align:center;
+
+}
+
+.loadingBar{
+
+    width:82%;
+    max-width:360px;
+
+    height:15px;
+
+    border:2px solid #39ff14;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    margin-top:18px;
+
+    box-shadow:
+    0 0 10px #39ff14;
+
+}
+
+.loadingProgress{
+
+    width:0%;
+
+    height:100%;
+
+    background:#39ff14;
+
+    box-shadow:
+    0 0 15px #39ff14;
+
+    transition:.2s;
+
+}
+
+
+/* ==================================================
+   APP
+================================================== */
+
+#app{
+
+    display:none;
+
+    min-height:100vh;
+
+    padding:
+    env(safe-area-inset-top)
+    8px
+    env(safe-area-inset-bottom)
+    8px;
+
+}
+
+.container{
+
+    width:100%;
+
+    max-width:720px;
+
+    margin:auto;
+
+}
+
+
+/* ==================================================
+   HEADER
+================================================== */
+
+.header{
+
+    text-align:center;
+
+    padding:8px 0 12px;
+
+}
+
+.header h1{
+
+    margin:0;
+
+    font-size:
+    clamp(25px,8vw,42px);
+
+    color:#39ff14;
+
+    text-shadow:
+    0 0 5px #39ff14,
+    0 0 15px #39ff14;
+
+}
+
+.header p{
+
+    margin:4px 0 0;
+
+    color:#ddd;
+
+    font-size:13px;
+
+}
+
+
+/* ==================================================
+   TELAS
+================================================== */
+
+.screen{
+    display:none;
+}
+
+.screen.active{
+    display:block;
+}
+
+
+/* ==================================================
+   CAIXA MENU
+================================================== */
+
+.menuBox{
+
+    background:
+    rgba(0,0,0,.82);
+
+    border:
+    2px solid #39ff14;
+
+    border-radius:20px;
+
+    padding:16px;
+
+    box-shadow:
+    0 0 18px
+    rgba(57,255,20,.3);
+
+}
+
+
+/* ==================================================
+   MENU
+================================================== */
+
+.menuImage{
+
+    display:block;
+
+    width:
+    min(65vw,250px);
+
+    height:180px;
+
+    object-fit:contain;
+
+    margin:0 auto 8px;
+
+}
+
+.menuText{
+
+    text-align:center;
+
+    color:#ddd;
+
+    font-size:14px;
+
+    line-height:1.5;
+
+    margin-bottom:14px;
+
+}
+
+button{
+
+    width:100%;
+
+    border:
+    2px solid #39ff14;
+
+    border-radius:13px;
+
+    padding:13px 10px;
+
+    margin:5px 0;
+
+    background:#071007;
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+}
+
+button:active{
+    transform:scale(.97);
+}
+
+.btnGreen{
+
+    background:#39ff14;
+
+    color:#000;
+
+}
+
+.btnGold{
+
+    border-color:#ffd700;
+
+    color:#ffd700;
+
+}
+
+.btnRed{
+
+    border-color:#ff4444;
+
+    color:#ff7777;
+
+}
+
+
+/* ==================================================
+   NÍVEIS
+================================================== */
+
+.levelTitle{
+
+    text-align:center;
+
+    color:#39ff14;
+
+    margin:
+    5px 0 15px;
+
+}
+
+.levelGrid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:9px;
+
+}
+
+.levelButton{
+
+    margin:0;
+
+    min-height:70px;
+
+}
+
+.levelButton.locked{
+
+    opacity:.4;
+
+    border-color:#777;
+
+}
+
+.levelButton.completed{
+
+    border-color:#ffd700;
+
+    color:#ffd700;
+
+}
+
+.levelNumber{
+
+    display:block;
+
+    font-size:20px;
+
+}
+
+.levelInfo{
+
+    display:block;
+
+    font-size:11px;
+
+    margin-top:4px;
+
+}
+
+
+/* ==================================================
+   TOPO DO JOGO
+================================================== */
+
+.gameTop{
+
+    background:
+    rgba(0,0,0,.84);
+
+    border:
+    2px solid #39ff14;
+
+    border-radius:16px;
+
+    padding:9px;
+
+    margin-bottom:9px;
+
+}
+
+.gameTitle{
+
+    text-align:center;
+
+    font-size:21px;
+
+    font-weight:900;
+
+    color:#39ff14;
+
+    margin-bottom:7px;
+
+}
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:5px;
+
+}
+
+.stat{
+
+    text-align:center;
+
+    background:#090909;
+
+    border:
+    1px solid #333;
+
+    border-radius:9px;
+
+    padding:6px 2px;
+
+}
+
+.stat span{
+
+    display:block;
+
+    color:#39ff14;
+
+    font-size:16px;
+
+    font-weight:900;
+
+}
+
+.stat small{
+
+    display:block;
+
+    color:#aaa;
+
+    font-size:8px;
+
+    margin-top:2px;
+
+}
+
+.progressOuter{
+
+    width:100%;
+
+    height:9px;
+
+    margin-top:8px;
+
+    background:#111;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    border:
+    1px solid #333;
+
+}
+
+.progressInner{
+
+    width:0%;
+
+    height:100%;
+
+    background:#39ff14;
+
+    box-shadow:
+    0 0 8px #39ff14;
+
+    transition:.3s;
+
+}
+
+
+/* ==================================================
+   BÔNUS
+================================================== */
+
+.bonusArea{
+
+    position:relative;
+
+    width:100%;
+
+    padding:10px;
+
+    margin:8px 0;
+
+    border:
+    2px solid #ffd700;
+
+    border-radius:15px;
+
+    background:
+    rgba(35,28,0,.88);
+
+    text-align:center;
+
+    overflow:hidden;
+
+}
+
+.bonusHeader{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:8px;
+
+    min-height:52px;
+
+}
+
+.bonusImage{
+
+    width:52px;
+    height:52px;
+
+    object-fit:contain;
+
+    flex:none;
+
+    filter:
+    drop-shadow(0 0 7px #ffd700);
+
+}
+
+.bonusTitle{
+
+    color:#ffd700;
+
+    font-size:15px;
+
+    font-weight:900;
+
+}
+
+#bonusButton{
+
+    display:block;
+
+    width:100%;
+
+    max-width:330px;
+
+    margin:
+    8px auto 4px;
+
+    padding:12px 8px;
+
+    border:
+    2px solid #ffd700;
+
+    color:#ffd700;
+
+    background:#151100;
+
+    font-size:14px;
+
+}
+
+#bonusTimer{
+
+    display:block;
+
+    width:100%;
+
+    min-height:22px;
+
+    margin-top:5px;
+
+    color:#fff;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    line-height:22px;
+
+}
+
+#bonusTimer.active{
+
+    color:#ffd700;
+
+    font-size:16px;
+
+    text-shadow:
+    0 0 7px #ffd700;
+
+}
+
+#bonusButton.used{
+
+    opacity:.45;
+
+    pointer-events:none;
+
+}
+
+
+/* ==================================================
+   TABULEIRO
+================================================== */
+
+#board{
+
+    display:grid;
+
+    width:100%;
+
+    margin:9px auto;
+
+    gap:6px;
+
+    perspective:1000px;
+
+}
+
+.card{
+
+    position:relative;
+
+    width:100%;
+
+    aspect-ratio:1 / 1;
+
+    cursor:pointer;
+
+    perspective:700px;
+
+}
+
+.cardInner{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    transition:
+    transform .35s;
+
+    transform-style:
+    preserve-3d;
+
+}
+
+.card.flipped .cardInner,
+.card.matched .cardInner{
+
+    transform:
+    rotateY(180deg);
+
+}
+
+.cardFace{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    border-radius:9px;
+
+    overflow:hidden;
+
+    backface-visibility:hidden;
+
+}
+
+
+/* ==================================================
+   VERSO DA CARTA
+================================================== */
+
+.cardBack{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:
+
+    radial-gradient(
+        circle,
+        #173b17 0%,
+        #081208 50%,
+        #020202 100%
+    );
+
+    border:
+    2px solid #39ff14;
+
+    box-shadow:
+    0 0 7px
+    rgba(57,255,20,.3);
+
+}
+
+.cardBack::after{
+
+    content:"66";
+
+    font-size:
+    clamp(17px,5vw,30px);
+
+    font-weight:900;
+
+    color:#39ff14;
+
+    text-shadow:
+    0 0 8px #39ff14;
+
+}
+
+
+/* ==================================================
+   FRENTE DA CARTA
+================================================== */
+
+.cardFront{
+
+    transform:
+    rotateY(180deg);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#101010;
+
+    border:
+    2px solid #39ff14;
+
+}
+
+.cardFront img{
+
+    width:88%;
+    height:88%;
+
+    object-fit:contain;
+
+    pointer-events:none;
+
+    user-select:none;
+
+}
+
+.card.matched .cardFront{
+
+    border-color:#ffd700;
+
+    box-shadow:
+    0 0 12px
+    rgba(255,215,0,.8);
+
+}
+
+
+/* ==================================================
+   CARTA ERRADA
+================================================== */
+
+.card.wrong .cardFront{
+
+    animation:
+    wrongCard .25s;
+
+}
+
+@keyframes wrongCard{
+
+    25%{
+        transform:
+        rotateY(180deg)
+        translateX(-5px);
+    }
+
+    50%{
+        transform:
+        rotateY(180deg)
+        translateX(5px);
+    }
+
+    75%{
+        transform:
+        rotateY(180deg)
+        translateX(-5px);
+    }
+
+}
+
+
+/* ==================================================
+   BOTÕES DO JOGO
+================================================== */
+
+.gameButtons{
+
+    display:grid;
+
+    grid-template-columns:
+    1fr 1fr;
+
+    gap:6px;
+
+    margin-top:7px;
+
+}
+
+.gameButtons button{
+
+    margin:0;
+
+    padding:11px 5px;
+
+    font-size:12px;
+
+}
+
+
+/* ==================================================
+   MODAL DO NÍVEL
+================================================== */
+
+#levelModal{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:5000;
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:20px;
+
+    background:
+    rgba(0,0,0,.84);
+
+}
+
+#levelModal.show{
+
+    display:flex;
+
+}
+
+.levelModalBox{
+
+    width:100%;
+
+    max-width:380px;
+
+    padding:22px 17px;
+
+    text-align:center;
+
+    background:#080808;
+
+    border:
+    2px solid #39ff14;
+
+    border-radius:20px;
+
+    box-shadow:
+    0 0 25px
+    rgba(57,255,20,.5);
+
+}
+
+.levelModalBox h2{
+
+    margin-top:0;
+
+    color:#39ff14;
+
+    font-size:25px;
+
+}
+
+
+/* ==================================================
+   BÔNUS TRANSPARENTE
+================================================== */
+
+/*
+   AQUI ESTÁ A ALTERAÇÃO PRINCIPAL.
+
+   A tela do bônus NÃO fica mais preta.
+   Ela fica praticamente transparente,
+   permitindo enxergar o jogo e as cartas
+   abertas por trás.
+*/
+
+#bonusModal{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:6000;
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:flex-start;
+
+    padding-top:18px;
+
+    /*
+       FUNDO TRANSPARENTE
+    */
+
+    background:
+    rgba(0,0,0,0.08);
+
+    pointer-events:none;
+
+}
+
+#bonusModal.show{
+
+    display:flex;
+
+}
+
+
+/*
+   Caixa do bônus também ficou
+   transparente.
+*/
+
+.bonusModalBox{
+
+    width:auto;
+
+    min-width:190px;
+
+    max-width:280px;
+
+    padding:8px 15px;
+
+    text-align:center;
+
+    background:
+    rgba(0,0,0,.28);
+
+    border:
+    2px solid rgba(255,215,0,.85);
+
+    border-radius:16px;
+
+    box-shadow:
+    0 0 15px
+    rgba(255,215,0,.35);
+
+    backdrop-filter:
+    blur(2px);
+
+    -webkit-backdrop-filter:
+    blur(2px);
+
+}
+
+.bonusModalBox h2{
+
+    margin:0;
+
+    color:#ffd700;
+
+    font-size:17px;
+
+    text-shadow:
+    0 0 8px #000;
+
+}
+
+.bonusModalBox p{
+
+    margin:3px 0;
+
+    color:#fff;
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    text-shadow:
+    0 0 5px #000;
+
+}
+
+#bonusBigTimer{
+
+    font-size:42px;
+
+    color:#ffd700;
+
+    font-weight:900;
+
+    line-height:1;
+
+    margin:2px 0;
+
+    text-shadow:
+    0 0 10px #000,
+    0 0 15px #ffd700;
+
+}
+
+
+/* ==================================================
+   MUITAS CARTAS
+================================================== */
+
+.boardMany{
+
+    gap:4px !important;
+
+}
+
+.boardMany .cardFace{
+
+    border-radius:5px;
+
+}
+
+.boardMany .cardFront,
+.boardMany .cardBack{
+
+    border-width:1px;
+
+}
+
+
+/* ==================================================
+   CELULAR PEQUENO
+================================================== */
+
+@media(max-width:380px){
+
+    #app{
+
+        padding-left:5px;
+        padding-right:5px;
+
+    }
+
+    .gameTop{
+
+        padding:7px;
+
+    }
+
+    .bonusArea{
+
+        padding:8px;
+
+    }
+
+    .bonusImage{
+
+        width:45px;
+        height:45px;
+
+    }
+
+    .bonusTitle{
+
+        font-size:13px;
+
+    }
+
+    #bonusButton{
+
+        font-size:12px;
+
+    }
+
+    #board{
+
+        gap:4px;
+
+    }
+
+    .gameButtons button{
+
+        font-size:11px;
+
+    }
+
+}
+
+
+/* ==================================================
+   LANDSCAPE
+================================================== */
+
+@media(
+orientation:landscape
+) and
+(max-height:600px){
+
+    #app{
+
+        padding:4px 10px;
+
+    }
+
+    .header{
+
+        padding:2px;
+
+    }
+
+    .header h1{
+
+        font-size:25px;
+
+    }
+
+    .header p{
+
+        display:none;
+
+    }
+
+    .bonusArea{
+
+        padding:5px;
+
+        margin:4px 0;
+
+    }
+
+    .bonusHeader{
+
+        min-height:35px;
+
+    }
+
+    .bonusImage{
+
+        width:35px;
+        height:35px;
+
+    }
+
+    #bonusButton{
+
+        margin:3px auto;
+
+        padding:7px;
+
+    }
+
+    #bonusTimer{
+
+        min-height:17px;
+
+        line-height:17px;
+
+    }
+
+    #bonusModal{
+
+        padding-top:8px;
+
+    }
+
+    .bonusModalBox{
+
+        padding:5px 12px;
+
+    }
+
+    #bonusBigTimer{
+
+        font-size:32px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==================================================
+     LOADING
+================================================== -->
+
+<div id="loadingScreen">
+
+    <img
+    class="loadingLogo"
+    src="https://i.imgur.com/ZJWSEOx.png"
+    alt="MAEL66">
+
+    <div class="loadingTitle">
+
+        MAEL66 JOGO DA MEMÓRIA
+
+    </div>
+
+    <div
+    id="loadingStatus"
+    class="loadingStatus">
+
+        Preparando o jogo...
+
+    </div>
+
+    <div class="loadingBar">
+
+        <div
+        id="loadingProgress"
+        class="loadingProgress">
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==================================================
+     APP
+================================================== -->
+
+<div id="app">
+
+<div class="container">
+
+
+<!-- ==================================================
+     CABEÇALHO
+================================================== -->
+
+<div class="header">
+
+    <h1>🧠 MAEL66</h1>
+
+    <p>JOGO DA MEMÓRIA</p>
+
+</div>
+
+
+<!-- ==================================================
+     MENU
+================================================== -->
+
+<section
+id="menuScreen"
+class="screen active">
+
+<div class="menuBox">
+
+    <img
+    class="menuImage"
+    src="https://i.imgur.com/ZJWSEOx.png"
+    alt="MAEL66">
+
+    <div class="menuText">
+
+        Encontre todos os pares
+        e avance pelos níveis!
+
+        <br>
+
+        🎁 Use o bônus para
+        revelar as cartas por
+        <b>5 segundos</b>.
+
+    </div>
+
+
+    <button
+    class="btnGreen"
+    onclick="openLevels()">
+
+        🎮 JOGAR
+
+    </button>
+
+
+    <button
+    onclick="continueGame()">
+
+        ▶️ CONTINUAR
+
+    </button>
+
+
+    <button
+    class="btnGold"
+    onclick="showRecords()">
+
+        🏆 RECORDES
+
+    </button>
+
+
+    <button
+    class="btnRed"
+    onclick="resetProgress()">
+
+        🗑️ APAGAR PROGRESSO
+
+    </button>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+     NÍVEIS
+================================================== -->
+
+<section
+id="levelsScreen"
+class="screen">
+
+<div class="menuBox">
+
+    <h2 class="levelTitle">
+
+        🎯 ESCOLHA O NÍVEL
+
+    </h2>
+
+    <div
+    id="levelGrid"
+    class="levelGrid">
+    </div>
+
+
+    <button
+    onclick="showScreen('menuScreen')">
+
+        ⬅️ VOLTAR
+
+    </button>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+     RECORDES
+================================================== -->
+
+<section
+id="recordsScreen"
+class="screen">
+
+<div class="menuBox">
+
+    <h2 class="levelTitle">
+
+        🏆 RECORDES
+
+    </h2>
+
+    <div
+    id="recordsList">
+    </div>
+
+
+    <button
+    onclick="showScreen('menuScreen')">
+
+        ⬅️ VOLTAR
+
+    </button>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+     JOGO
+================================================== -->
+
+<section
+id="gameScreen"
+class="screen">
+
+
+<div class="gameTop">
+
+    <div
+    id="gameTitle"
+    class="gameTitle">
+
+        NÍVEL 1
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <span id="moves">
+                0
+            </span>
+
+            <small>
+                MOVIMENTOS
+            </small>
+
+        </div>
+
+
+        <div class="stat">
+
+            <span id="pairs">
+                0/4
+            </span>
+
+            <small>
+                PARES
+            </small>
+
+        </div>
+
+
+        <div class="stat">
+
+            <span id="time">
+                00:00
+            </span>
+
+            <small>
+                TEMPO
+            </small>
+
+        </div>
+
+
+        <div class="stat">
+
+            <span id="levelNumber">
+                1
+            </span>
+
+            <small>
+                NÍVEL
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <div class="progressOuter">
+
+        <div
+        id="levelProgress"
+        class="progressInner">
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==================================================
+     BÔNUS
+================================================== -->
+
+<div class="bonusArea">
+
+
+    <div class="bonusHeader">
+
+        <img
+        class="bonusImage"
+        src="https://i.imgur.com/fghEkX9.png"
+        alt="Bônus">
+
+
+        <div class="bonusTitle">
+
+            🎁 BÔNUS ESPECIAL
+
+        </div>
+
+    </div>
+
+
+    <button
+    id="bonusButton"
+    onclick="useBonus()">
+
+        👁️ VER CARTAS POR 5 SEGUNDOS
+
+    </button>
+
+
+    <span id="bonusTimer">
+
+        Bônus disponível
+
+    </span>
+
+
+</div>
+
+
+<!-- ==================================================
+     TABULEIRO
+================================================== -->
+
+<div id="board">
+</div>
+
+
+<!-- ==================================================
+     BOTÕES
+================================================== -->
+
+<div class="gameButtons">
+
+
+    <button
+    onclick="restartLevel()">
+
+        🔄 REINICIAR
+
+    </button>
+
+
+    <button
+    onclick="shuffleCurrent()">
+
+        🔀 EMBARALHAR
+
+    </button>
+
+
+    <button
+    onclick="openLevels()">
+
+        🎯 NÍVEIS
+
+    </button>
+
+
+    <button
+    onclick="showScreen('menuScreen')">
+
+        🏠 MENU
+
+    </button>
+
+</div>
+
+
+</section>
+
+</div>
+
+</div>
+
+
+<!-- ==================================================
+     MODAL NÍVEL
+================================================== -->
+
+<div
+id="levelModal"
+class="modal">
+
+<div class="levelModalBox">
+
+    <h2
+    id="levelModalTitle">
+
+        🎉 NÍVEL CONCLUÍDO!
+
+    </h2>
+
+
+    <p
+    id="levelModalText">
+    </p>
+
+
+    <button
+    class="btnGreen"
+    onclick="closeLevelModal()">
+
+        CONTINUAR
+
+    </button>
+
+</div>
+
+</div>
+
+
+<!-- ==================================================
+     MODAL BÔNUS TRANSPARENTE
+================================================== -->
+
+<div
+id="bonusModal">
+
+
+<div class="bonusModalBox">
+
+
+    <h2>
+
+        🎁 BÔNUS!
+
+    </h2>
+
+
+    <p>
+
+        MEMORIZE AS CARTAS
+
+    </p>
+
+
+    <div id="bonusBigTimer">
+
+        5
+
+    </div>
+
+
+</div>
+
+</div>
+
+
+<script>
+
+
+/* ==================================================
+   IMAGENS
+================================================== */
+
+const images = [
+
+    "https://i.imgur.com/5yVYLZ9.png",
+
+    "https://i.imgur.com/ouh1WMI.png",
+
+    "https://i.imgur.com/MLAxpKm.png",
+
+    "https://i.imgur.com/YfevHUQ.png",
+
+    "https://i.imgur.com/v4DURBq.png",
+
+    "https://i.imgur.com/vfmIMFz.png",
+
+    "https://i.imgur.com/uh0TtQR.png",
+
+    "https://i.imgur.com/OrFtIgs.png",
+
+    /* NOVAS IMAGENS */
+
+    "https://i.imgur.com/2DVcdAF.png",
+
+    "https://i.imgur.com/yUCtHql.png",
+
+    "https://i.imgur.com/b0UFUCd.png",
+
+    "https://i.imgur.com/4oLCaG1.png"
+
+];
+
+
+/* ==================================================
+   BÔNUS
+================================================== */
+
+const BONUS_IMAGE =
+"https://i.imgur.com/fghEkX9.png";
+
+
+/* ==================================================
+   NÍVEIS
+================================================== */
+
+const levels = [
+
+    {
+        level:1,
+        pairs:4,
+        cols:4
+    },
+
+    {
+        level:2,
+        pairs:6,
+        cols:4
+    },
+
+    {
+        level:3,
+        pairs:8,
+        cols:4
+    },
+
+    {
+        level:4,
+        pairs:10,
+        cols:5
+    },
+
+    {
+        level:5,
+        pairs:12,
+        cols:6
+    },
+
+    {
+        level:6,
+        pairs:15,
+        cols:6
+    },
+
+    {
+        level:7,
+        pairs:18,
+        cols:6
+    },
+
+    {
+        level:8,
+        pairs:20,
+        cols:8
+    },
+
+    {
+        level:9,
+        pairs:24,
+        cols:8
+    },
+
+    {
+        level:10,
+        pairs:30,
+        cols:10
+    }
+
+];
+
+
+/* ==================================================
+   VARIÁVEIS
+================================================== */
+
+let currentLevel=1;
+
+let cards=[];
+
+let firstCard=null;
+
+let secondCard=null;
+
+let lockBoard=false;
+
+let moves=0;
+
+let matchedPairs=0;
+
+let seconds=0;
+
+let timer=null;
+
+let bonusUsed=false;
+
+let bonusActive=false;
+
+let bonusTimer=null;
+
+let progress=
+loadProgress();
+
+
+/* ==================================================
+   ÁUDIO
+================================================== */
+
+let audioCtx=null;
+
+
+function initAudio(){
+
+    if(!audioCtx){
+
+        try{
+
+            audioCtx=
+            new(
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+        }catch(e){}
+
+    }
+
+
+    if(
+        audioCtx &&
+        audioCtx.state==="suspended"
+    ){
+
+        audioCtx.resume();
+
+    }
+
+}
+
+
+function sound(
+    frequency,
+    duration,
+    type="sine"
+){
+
+    initAudio();
+
+    if(!audioCtx)
+        return;
+
+
+    try{
+
+        const osc=
+        audioCtx.createOscillator();
+
+        const gain=
+        audioCtx.createGain();
+
+
+        osc.type=type;
+
+        osc.frequency.value=
+        frequency;
+
+
+        gain.gain.setValueAtTime(
+            0.0001,
+            audioCtx.currentTime
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.12,
+            audioCtx.currentTime+.01
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            audioCtx.currentTime+duration
+        );
+
+
+        osc.connect(gain);
+
+        gain.connect(
+            audioCtx.destination
+        );
+
+
+        osc.start();
+
+
+        osc.stop(
+            audioCtx.currentTime+
+            duration
+        );
+
+
+    }catch(e){}
+
+}
+
+
+function soundClick(){
+
+    sound(500,.08);
+
+}
+
+
+function soundFlip(){
+
+    sound(350,.07);
+
+}
+
+
+function soundCorrect(){
+
+    sound(700,.1);
+
+    setTimeout(
+        ()=>sound(900,.12),
+        100
+    );
+
+}
+
+
+function soundWrong(){
+
+    sound(
+        180,
+        .15,
+        "square"
+    );
+
+}
+
+
+function soundVictory(){
+
+    const notes=[
+        523,
+        659,
+        784,
+        1046
+    ];
+
+
+    notes.forEach(
+        (note,index)=>{
+
+            setTimeout(
+                ()=>{
+                    sound(
+                        note,
+                        .16
+                    );
+                },
+                index*130
+            );
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+   LOADING
+================================================== */
+
+function startLoading(){
+
+    const bar=
+    document.getElementById(
+        "loadingProgress"
+    );
+
+
+    const status=
+    document.getElementById(
+        "loadingStatus"
+    );
+
+
+    let percentage=0;
+
+
+    const messages=[
+
+        "Carregando imagens...",
+
+        "Preparando cartas...",
+
+        "Preparando níveis...",
+
+        "Carregando bônus...",
+
+        "Quase pronto..."
+
+    ];
+
+
+    const interval=
+    setInterval(()=>{
+
+        percentage+=4;
+
+
+        if(
+            percentage>100
+        ){
+
+            percentage=100;
+
+        }
+
+
+        bar.style.width=
+        percentage+"%";
+
+
+        const index=
+        Math.min(
+            Math.floor(
+                percentage/20
+            ),
+            messages.length-1
+        );
+
+
+        status.textContent=
+        messages[index];
+
+
+        if(
+            percentage>=100
+        ){
+
+            clearInterval(
+                interval
+            );
+
+
+            setTimeout(()=>{
+
+                document
+                .getElementById(
+                    "loadingScreen"
+                )
+                .style.display=
+                "none";
+
+
+                document
+                .getElementById(
+                    "app"
+                )
+                .style.display=
+                "block";
+
+
+                renderLevels();
+
+            },500);
+
+        }
+
+    },100);
+
+}
+
+
+/* ==================================================
+   STORAGE
+================================================== */
+
+function loadProgress(){
+
+    try{
+
+        const saved=
+        localStorage.getItem(
+            "mael66_memoria_progress"
+        );
+
+
+        if(saved){
+
+            const obj=
+            JSON.parse(saved);
+
+
+            return{
+
+                unlocked:
+                obj.unlocked||1,
+
+                completed:
+                obj.completed||{},
+
+                records:
+                obj.records||{},
+
+                lastLevel:
+                obj.lastLevel||1
+
+            };
+
+        }
+
+    }catch(e){}
+
+
+    return{
+
+        unlocked:1,
+
+        completed:{},
+
+        records:{},
+
+        lastLevel:1
+
+    };
+
+}
+
+
+function saveProgress(){
+
+    try{
+
+        localStorage.setItem(
+
+            "mael66_memoria_progress",
+
+            JSON.stringify(progress)
+
+        );
+
+    }catch(e){}
+
+}
+
+
+/* ==================================================
+   TELAS
+================================================== */
+
+function showScreen(id){
+
+    document
+    .querySelectorAll(".screen")
+    .forEach(
+        screen=>{
+            screen.classList
+            .remove("active");
+        }
+    );
+
+
+    const target=
+    document.getElementById(id);
+
+
+    if(target){
+
+        target.classList
+        .add("active");
+
+    }
+
+
+    window.scrollTo(0,0);
+
+    soundClick();
+
+}
+
+
+/* ==================================================
+   NÍVEIS
+================================================== */
+
+function openLevels(){
+
+    stopTimer();
+
+    renderLevels();
+
+    showScreen(
+        "levelsScreen"
+    );
+
+}
+
+
+function renderLevels(){
+
+    const grid=
+    document.getElementById(
+        "levelGrid"
+    );
+
+
+    grid.innerHTML="";
+
+
+    levels.forEach(
+        info=>{
+
+            const button=
+            document.createElement(
+                "button"
+            );
+
+
+            button.className=
+            "levelButton";
+
+
+            if(
+                info.level >
+                progress.unlocked
+            ){
+
+                button.classList
+                .add("locked");
+
+
+                button.innerHTML=`
+
+                    <span
+                    class="levelNumber">
+
+                        🔒 NÍVEL
+                        ${info.level}
+
+                    </span>
+
+                    <span
+                    class="levelInfo">
+
+                        Complete o anterior
+
+                    </span>
+
+                `;
+
+
+                button.onclick=()=>{
+
+                    soundWrong();
+
+                    alert(
+                        "🔒 Este nível está bloqueado!\n\nComplete o nível anterior."
+                    );
+
+                };
+
+            }else{
+
+                if(
+                    progress.completed[
+                        info.level
+                    ]
+                ){
+
+                    button.classList
+                    .add("completed");
+
+                }
+
+
+                const trophy=
+                progress.completed[
+                    info.level
+                ]
+                ? " 🏆"
+                : "";
+
+
+                button.innerHTML=`
+
+                    <span
+                    class="levelNumber">
+
+                        🎯 NÍVEL
+                        ${info.level}
+                        ${trophy}
+
+                    </span>
+
+                    <span
+                    class="levelInfo">
+
+                        ${info.pairs}
+                        pares
+
+                    </span>
+
+                `;
+
+
+                button.onclick=()=>{
+
+                    startLevel(
+                        info.level
+                    );
+
+                };
+
+            }
+
+
+            grid.appendChild(
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+   CONTINUAR
+================================================== */
+
+function continueGame(){
+
+    let level=
+    progress.lastLevel||1;
+
+
+    if(
+        level >
+        progress.unlocked
+    ){
+
+        level=
+        progress.unlocked;
+
+    }
+
+
+    startLevel(level);
+
+}
+
+
+/* ==================================================
+   INICIAR NÍVEL
+================================================== */
+
+function startLevel(level){
+
+    initAudio();
+
+
+    const info=
+    levels.find(
+        item=>
+        item.level===level
+    );
+
+
+    if(!info)
+        return;
+
+
+    currentLevel=
+    level;
+
+
+    progress.lastLevel=
+    currentLevel;
+
+
+    saveProgress();
+
+
+    moves=0;
+
+    matchedPairs=0;
+
+    seconds=0;
+
+
+    firstCard=null;
+
+    secondCard=null;
+
+
+    lockBoard=false;
+
+
+    bonusUsed=false;
+
+    bonusActive=false;
+
+
+    if(bonusTimer){
+
+        clearInterval(
+            bonusTimer
+        );
+
+        bonusTimer=null;
+
+    }
+
+
+    document
+    .getElementById(
+        "bonusButton"
+    )
+    .classList
+    .remove("used");
+
+
+    const bonusText=
+    document.getElementById(
+        "bonusTimer"
+    );
+
+
+    bonusText.textContent=
+    "Bônus disponível";
+
+
+    bonusText.classList
+    .remove("active");
+
+
+    document
+    .getElementById(
+        "levelNumber"
+    )
+    .textContent=
+    level;
+
+
+    document
+    .getElementById(
+        "gameTitle"
+    )
+    .textContent=
+    "NÍVEL "+level;
+
+
+    createBoard(info);
+
+    updateStats();
+
+    startTimer();
+
+
+    showScreen(
+        "gameScreen"
+    );
+
+}
+
+
+/* ==================================================
+   CRIAR TABULEIRO
+================================================== */
+
+function createBoard(info){
+
+    const board=
+    document.getElementById(
+        "board"
+    );
+
+
+    board.innerHTML="";
+
+
+    board.style.gridTemplateColumns=
+    `repeat(${info.cols},1fr)`;
+
+
+    board.classList.remove(
+        "boardMany"
+    );
+
+
+    if(
+        info.pairs>=15
+    ){
+
+        board.classList
+        .add("boardMany");
+
+    }
+
+
+    let selectedImages=[];
+
+
+    for(
+        let i=0;
+        i<info.pairs;
+        i++
+    ){
+
+        selectedImages.push(
+            images[
+                i%images.length
+            ]
+        );
+
+    }
+
+
+    cards=[];
+
+
+    selectedImages.forEach(
+        (image,index)=>{
+
+            cards.push({
+
+                id:
+                index+"A",
+
+                image:image
+
+            });
+
+
+            cards.push({
+
+                id:
+                index+"B",
+
+                image:image
+
+            });
+
+        }
+    );
+
+
+    shuffle(cards);
+
+
+    cards.forEach(
+        (data,index)=>{
+
+            const card=
+            document.createElement(
+                "div"
+            );
+
+
+            card.className="card";
+
+
+            card.dataset.index=
+            index;
+
+
+            card.innerHTML=`
+
+                <div class="cardInner">
+
+                    <div
+                    class="cardFace cardBack">
+                    </div>
+
+
+                    <div
+                    class="cardFace cardFront">
+
+                        <img
+                        src="${data.image}"
+                        alt="Carta"
+                        draggable="false">
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            card.addEventListener(
+                "click",
+                ()=>{
+                    flipCard(
+                        card,
+                        index
+                    );
+                }
+            );
+
+
+            board.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+   EMBARALHAR
+================================================== */
+
+function shuffle(array){
+
+    for(
+        let i=array.length-1;
+        i>0;
+        i--
+    ){
+
+        const j=
+        Math.floor(
+            Math.random()*(i+1)
+        );
+
+
+        [
+            array[i],
+            array[j]
+        ]=
+        [
+            array[j],
+            array[i]
+        ];
+
+    }
+
+
+    return array;
+
+}
+
+
+/* ==================================================
+   VIRAR CARTA
+================================================== */
+
+function flipCard(
+    card,
+    index
+){
+
+    initAudio();
+
+
+    if(lockBoard)
+        return;
+
+
+    if(bonusActive)
+        return;
+
+
+    if(
+        card.classList
+        .contains("flipped") ||
+
+        card.classList
+        .contains("matched")
+    ){
+
+        return;
+
+    }
+
+
+    soundFlip();
+
+
+    card.classList
+    .add("flipped");
+
+
+    if(!firstCard){
+
+        firstCard={
+
+            element:card,
+
+            index:index,
+
+            image:
+            cards[index].image
+
+        };
+
+
+        return;
+
+    }
+
+
+    secondCard={
+
+        element:card,
+
+        index:index,
+
+        image:
+        cards[index].image
+
+    };
+
+
+    moves++;
+
+    updateStats();
+
+    checkMatch();
+
+}
+
+
+/* ==================================================
+   VERIFICAR
+================================================== */
+
+function checkMatch(){
+
+    lockBoard=true;
+
+
+    const isMatch=
+    firstCard.image===
+    secondCard.image;
+
+
+    if(isMatch){
+
+        setTimeout(()=>{
+
+            firstCard.element
+            .classList
+            .add("matched");
+
+
+            secondCard.element
+            .classList
+            .add("matched");
+
+
+            matchedPairs++;
+
+
+            soundCorrect();
+
+            updateStats();
+
+            resetTurn();
+
+
+            if(
+                matchedPairs>=
+                getCurrentInfo().pairs
+            ){
+
+                finishLevel();
+
+            }
+
+        },300);
+
+    }else{
+
+        firstCard.element
+        .classList
+        .add("wrong");
+
+
+        secondCard.element
+        .classList
+        .add("wrong");
+
+
+        soundWrong();
+
+
+        setTimeout(()=>{
+
+            firstCard.element
+            .classList
+            .remove(
+                "flipped",
+                "wrong"
+            );
+
+
+            secondCard.element
+            .classList
+            .remove(
+                "flipped",
+                "wrong"
+            );
+
+
+            resetTurn();
+
+        },700);
+
+    }
+
+}
+
+
+/* ==================================================
+   RESETAR TURNO
+================================================== */
+
+function resetTurn(){
+
+    firstCard=null;
+
+    secondCard=null;
+
+    lockBoard=false;
+
+}
+
+
+/* ==================================================
+   NÍVEL ATUAL
+================================================== */
+
+function getCurrentInfo(){
+
+    return levels.find(
+        item=>
+        item.level===
+        currentLevel
+    );
+
+}
+
+
+/* ==================================================
+   ESTATÍSTICAS
+================================================== */
+
+function updateStats(){
+
+    document
+    .getElementById(
+        "moves"
+    )
+    .textContent=
+    moves;
+
+
+    document
+    .getElementById(
+        "pairs"
+    )
+    .textContent=
+
+    matchedPairs+
+    "/"+
+    getCurrentInfo().pairs;
+
+
+    const percentage=
+
+    (
+        matchedPairs/
+        getCurrentInfo().pairs
+    )*100;
+
+
+    document
+    .getElementById(
+        "levelProgress"
+    )
+    .style.width=
+    percentage+"%";
+
+}
+
+
+/* ==================================================
+   CRONÔMETRO
+================================================== */
+
+function startTimer(){
+
+    stopTimer();
+
+
+    timer=
+    setInterval(()=>{
+
+        seconds++;
+
+
+        document
+        .getElementById(
+            "time"
+        )
+        .textContent=
+        formatTime(seconds);
+
+
+    },1000);
+
+}
+
+
+function stopTimer(){
+
+    if(timer){
+
+        clearInterval(timer);
+
+        timer=null;
+
+    }
+
+}
+
+
+function formatTime(total){
+
+    const minutes=
+    Math.floor(
+        total/60
+    )
+    .toString()
+    .padStart(2,"0");
+
+
+    const secondsValue=
+    (
+        total%60
+    )
+    .toString()
+    .padStart(2,"0");
+
+
+    return(
+        minutes+
+        ":"+
+        secondsValue
+    );
+
+}
+
+
+/* ==================================================
+   BÔNUS 5 SEGUNDOS
+================================================== */
+
+function useBonus(){
+
+    initAudio();
+
+
+    if(bonusUsed)
+        return;
+
+
+    if(bonusActive)
+        return;
+
+
+    bonusUsed=true;
+
+    bonusActive=true;
+
+
+    sound(
+        800,
+        .15
+    );
+
+
+    const button=
+    document.getElementById(
+        "bonusButton"
+    );
+
+
+    button.classList
+    .add("used");
+
+
+    const timerText=
+    document.getElementById(
+        "bonusTimer"
+    );
+
+
+    timerText.classList
+    .add("active");
+
+
+    const boardCards=
+    document.querySelectorAll(
+        ".card"
+    );
+
+
+    /*
+       ABRE TODAS AS CARTAS
+    */
+
+    boardCards.forEach(
+        card=>{
+
+            card.classList
+            .add("flipped");
+
+        }
+    );
+
+
+    /*
+       MOSTRA O AVISO
+       TRANSPARENTE
+    */
+
+    const modal=
+    document.getElementById(
+        "bonusModal"
+    );
+
+
+    modal.classList
+    .add("show");
+
+
+    let remaining=5;
+
+
+    document
+    .getElementById(
+        "bonusBigTimer"
+    )
+    .textContent=
+    remaining;
+
+
+    timerText.textContent=
+    "👁️ Cartas visíveis: "+
+    remaining+
+    " segundos";
+
+
+    bonusTimer=
+    setInterval(()=>{
+
+        remaining--;
+
+
+        document
+        .getElementById(
+            "bonusBigTimer"
+        )
+        .textContent=
+        remaining;
+
+
+        timerText.textContent=
+        "👁️ Cartas visíveis: "+
+        remaining+
+        " segundos";
+
+
+        if(
+            remaining<=0
+        ){
+
+            clearInterval(
+                bonusTimer
+            );
+
+
+            bonusTimer=null;
+
+
+            /*
+               FECHA A TELA
+               TRANSPARENTE
+            */
+
+            modal.classList
+            .remove("show");
+
+
+            /*
+               FECHA AS CARTAS
+            */
+
+            boardCards.forEach(
+                card=>{
+
+                    if(
+                        !card.classList
+                        .contains("matched")
+                    ){
+
+                        card.classList
+                        .remove("flipped");
+
+                    }
+
+                }
+            );
+
+
+            bonusActive=false;
+
+
+            timerText.textContent=
+            "🎁 Bônus utilizado neste nível";
+
+
+            timerText.classList
+            .remove("active");
+
+        }
+
+
+    },1000);
+
+}
+
+
+/* ==================================================
+   REINICIAR
+================================================== */
+
+function restartLevel(){
+
+    soundClick();
+
+    startLevel(
+        currentLevel
+    );
+
+}
+
+
+/* ==================================================
+   EMBARALHAR ATUAL
+================================================== */
+
+function shuffleCurrent(){
+
+    soundClick();
+
+
+    if(lockBoard)
+        return;
+
+
+    createBoard(
+        getCurrentInfo()
+    );
+
+
+    firstCard=null;
+
+    secondCard=null;
+
+    moves=0;
+
+    matchedPairs=0;
+
+
+    updateStats();
+
+}
+
+
+/* ==================================================
+   FINALIZAR NÍVEL
+================================================== */
+
+function finishLevel(){
+
+    stopTimer();
+
+
+    progress.completed[
+        currentLevel
+    ]={
+
+        moves:moves,
+
+        time:seconds
+
+    };
+
+
+    let newLevel=false;
+
+
+    if(
+
+        currentLevel===
+        progress.unlocked &&
+
+        currentLevel<
+        levels.length
+
+    ){
+
+        progress.unlocked=
+        currentLevel+1;
+
+        newLevel=true;
+
+    }
+
+
+    saveProgress();
+
+
+    soundVictory();
+
+
+    setTimeout(()=>{
+
+        const modal=
+        document.getElementById(
+            "levelModal"
+        );
+
+
+        const title=
+        document.getElementById(
+            "levelModalTitle"
+        );
+
+
+        const text=
+        document.getElementById(
+            "levelModalText"
+        );
+
+
+        if(newLevel){
+
+            title.textContent=
+            "🎉 NÍVEL CONCLUÍDO!";
+
+
+            text.innerHTML=`
+
+                Você completou o
+                <b>NÍVEL ${currentLevel}</b>!
+
+                <br><br>
+
+                🎯 Movimentos:
+                <b>${moves}</b>
+
+                <br>
+
+                ⏱️ Tempo:
+                <b>${formatTime(seconds)}</b>
+
+                <br><br>
+
+                🔓
+                <b>NÍVEL
+                ${currentLevel+1}
+                DESBLOQUEADO!</b>
+
+            `;
+
+        }else if(
+            currentLevel===
+            levels.length
+        ){
+
+            title.textContent=
+            "🏆 VOCÊ VENCEU!";
+
+
+            text.innerHTML=`
+
+                Parabéns!
+
+                <br><br>
+
+                Você completou os
+                <b>10 NÍVEIS</b>
+                do MAEL66 JOGO DA MEMÓRIA!
+
+                <br><br>
+
+                🎯 Movimentos:
+                <b>${moves}</b>
+
+                <br>
+
+                ⏱️ Tempo:
+                <b>${formatTime(seconds)}</b>
+
+            `;
+
+        }else{
+
+            title.textContent=
+            "🎉 NÍVEL CONCLUÍDO!";
+
+
+            text.innerHTML=`
+
+                Você completou o
+                <b>NÍVEL ${currentLevel}</b>!
+
+                <br><br>
+
+                🎯 Movimentos:
+                <b>${moves}</b>
+
+                <br>
+
+                ⏱️ Tempo:
+                <b>${formatTime(seconds)}</b>
+
+            `;
+
+        }
+
+
+        modal.classList
+        .add("show");
+
+
+    },500);
+
+}
+
+
+/* ==================================================
+   FECHAR MODAL
+================================================== */
+
+function closeLevelModal(){
+
+    document
+    .getElementById(
+        "levelModal"
+    )
+    .classList
+    .remove("show");
+
+
+    if(
+
+        currentLevel<
+        levels.length &&
+
+        currentLevel<
+        progress.unlocked
+
+    ){
+
+        startLevel(
+            currentLevel+1
+        );
+
+    }else{
+
+        showScreen(
+            "levelsScreen"
+        );
+
+        renderLevels();
+
+    }
+
+}
+
+
+/* ==================================================
+   RECORDES
+================================================== */
+
+function showRecords(){
+
+    const list=
+    document.getElementById(
+        "recordsList"
+    );
+
+
+    list.innerHTML="";
+
+
+    levels.forEach(
+        info=>{
+
+            const record=
+            progress.completed[
+                info.level
+            ];
+
+
+            const box=
+            document.createElement(
+                "div"
+            );
+
+
+            box.style.cssText=`
+
+                border:
+                1px solid #333;
+
+                border-radius:12px;
+
+                padding:12px;
+
+                margin:7px 0;
+
+                background:#090909;
+
+            `;
+
+
+            if(record){
+
+                box.innerHTML=`
+
+                    <b
+                    style="color:#39ff14">
+
+                        🏆 NÍVEL
+                        ${info.level}
+
+                    </b>
+
+                    <br><br>
+
+                    🎯 Movimentos:
+                    ${record.moves}
+
+                    <br>
+
+                    ⏱️ Tempo:
+                    ${formatTime(
+                        record.time
+                    )}
+
+                `;
+
+            }else{
+
+                box.innerHTML=`
+
+                    <b
+                    style="color:#777">
+
+                        🔒 NÍVEL
+                        ${info.level}
+
+                    </b>
+
+                    <br>
+
+                    Ainda não concluído.
+
+                `;
+
+            }
+
+
+            list.appendChild(
+                box
+            );
+
+        }
+    );
+
+
+    showScreen(
+        "recordsScreen"
+    );
+
+}
+
+
+/* ==================================================
+   APAGAR PROGRESSO
+================================================== */
+
+function resetProgress(){
+
+    soundClick();
+
+
+    const reset=
+    confirm(
+        "Tem certeza que deseja apagar todo o progresso?"
+    );
+
+
+    if(!reset)
+        return;
+
+
+    progress={
+
+        unlocked:1,
+
+        completed:{},
+
+        records:{},
+
+        lastLevel:1
+
+    };
+
+
+    saveProgress();
+
+
+    renderLevels();
+
+
+    alert(
+        "✅ Progresso apagado!"
+    );
+
+}
+
+
+/* ==================================================
+   ÁUDIO NO CELULAR
+================================================== */
+
+window.addEventListener(
+    "pointerdown",
+    initAudio,
+    {once:true}
+);
+
+window.addEventListener(
+    "touchstart",
+    initAudio,
+    {once:true}
+);
+
+
+/* ==================================================
+   INICIAR
+================================================== */
+
+window.addEventListener(
+    "load",
+    startLoading
+);
+
+</script>
+
+</body>
+</html>

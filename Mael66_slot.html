@@ -1,0 +1,2847 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
+
+<meta name="theme-color"
+content="#000000">
+
+<title>MAEL66 SLOT BR</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+    font-family:Arial,sans-serif;
+}
+
+/* ================= LOADING ================= */
+
+#loadingScreen{
+    position:fixed;
+    inset:0;
+
+    background:
+    linear-gradient(
+        180deg,
+        #000 0%,
+        #1a4d2e 50%,
+        #000 100%
+    );
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    overflow:hidden;
+    z-index:100;
+
+    transition:opacity .5s ease;
+}
+
+.loadingImage{
+    position:absolute;
+
+    top:4%;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:88%;
+    max-width:400px;
+
+    border-radius:20px;
+
+    box-shadow:
+        0 0 40px #ffd70066,
+        0 0 70px #20ff0044;
+
+    border:3px solid #ffd700;
+
+    animation:pulse 2s infinite ease-in-out;
+
+    object-fit:contain;
+}
+
+@keyframes pulse{
+
+    0%,100%{
+        transform:
+        translateX(-50%)
+        scale(1);
+    }
+
+    50%{
+        transform:
+        translateX(-50%)
+        scale(1.03);
+    }
+
+}
+
+.darkOverlay{
+    position:absolute;
+    inset:0;
+
+    background:
+    linear-gradient(
+        to bottom,
+        rgba(0,0,0,.1) 0%,
+        rgba(0,0,0,.2) 40%,
+        rgba(0,0,0,.85) 100%
+    );
+
+    z-index:1;
+}
+
+.loadingBox{
+    position:absolute;
+    z-index:5;
+
+    left:5%;
+    right:5%;
+    bottom:4%;
+
+    padding:20px 16px;
+
+    background:#000;
+
+    border:3px solid #20ff00;
+
+    border-radius:22px;
+
+    box-shadow:
+        0 0 8px #20ff00,
+        0 0 20px #20ff00,
+        inset 0 0 15px rgba(32,255,0,.25);
+}
+
+.gameTitle{
+    text-align:center;
+
+    color:#fff;
+
+    font-size:
+    clamp(22px,7vw,34px);
+
+    font-weight:900;
+
+    letter-spacing:2px;
+
+    margin-bottom:8px;
+
+    text-shadow:
+        0 0 10px #20ff00;
+}
+
+.status{
+    text-align:center;
+
+    color:#20ff00;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+    margin-bottom:10px;
+}
+
+.progressBar{
+    width:100%;
+    height:18px;
+
+    background:#111;
+
+    border:2px solid #20ff00;
+
+    border-radius:20px;
+
+    padding:2px;
+
+    box-shadow:
+        0 0 10px #20ff00;
+}
+
+.progress{
+    width:0%;
+    height:100%;
+
+    border-radius:15px;
+
+    background:
+    linear-gradient(
+        90deg,
+        #20ff00,
+        #ffd700
+    );
+
+    box-shadow:
+        0 0 12px #20ff00;
+
+    transition:
+        width .1s linear;
+}
+
+.percent{
+    text-align:center;
+
+    color:#20ff00;
+
+    font-size:18px;
+
+    font-weight:900;
+
+    margin-top:7px;
+}
+
+.steps{
+    margin-top:12px;
+
+    color:#fff;
+
+    font-size:12px;
+
+    line-height:1.8;
+}
+
+.step{
+    opacity:.35;
+}
+
+.step.active{
+    opacity:1;
+
+    color:#20ff00;
+
+    font-weight:bold;
+
+    text-shadow:
+        0 0 8px #20ff00;
+}
+
+
+/* ================= LOGIN ================= */
+
+.auth-screen{
+
+    display:none;
+
+    min-height:100vh;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #000810 0%,
+        #0a2a1a 50%,
+        #000810 100%
+    );
+}
+
+.auth-card{
+
+    background:
+    linear-gradient(
+        145deg,
+        #0f2f1f,
+        #0a1f15
+    );
+
+    border:2px solid #ffd700;
+
+    border-radius:20px;
+
+    padding:30px;
+
+    width:100%;
+
+    max-width:400px;
+
+    box-shadow:
+        0 0 30px #ffd70044;
+}
+
+.auth-title{
+
+    color:#ffd700;
+
+    font-weight:900;
+
+    font-size:2rem;
+
+    text-align:center;
+
+    margin-bottom:5px;
+
+    text-shadow:
+        0 0 10px #ffd700;
+}
+
+.auth-subtitle{
+
+    color:#20ff00;
+
+    text-align:center;
+
+    margin-bottom:25px;
+
+    font-size:1rem;
+}
+
+.input-field{
+
+    width:100%;
+
+    padding:15px 18px;
+
+    margin:8px 0;
+
+    background:#00000088;
+
+    border:2px solid #20ff0055;
+
+    border-radius:12px;
+
+    color:white;
+
+    font-size:1rem;
+
+    outline:none;
+}
+
+.input-field:focus{
+
+    border-color:#20ff00;
+
+    box-shadow:
+        0 0 12px #20ff0055;
+}
+
+.btn{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    font-weight:700;
+
+    font-size:1.1rem;
+
+    cursor:pointer;
+
+    margin-top:12px;
+}
+
+.btn-green{
+
+    background:
+    linear-gradient(
+        90deg,
+        #00aa33,
+        #20ff00
+    );
+
+    color:#000;
+}
+
+.btn-gold{
+
+    background:
+    linear-gradient(
+        90deg,
+        #cc9900,
+        #ffd700
+    );
+
+    color:#000;
+}
+
+.toggle-text{
+
+    color:#aaa;
+
+    text-align:center;
+
+    margin-top:20px;
+
+    font-size:.95rem;
+}
+
+.toggle-link{
+
+    color:#20ff00;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    text-decoration:underline;
+}
+
+.error-msg{
+
+    color:#ff4444;
+
+    text-align:center;
+
+    margin-top:10px;
+
+    font-size:.9rem;
+
+    min-height:24px;
+}
+
+
+/* ================= JOGO ================= */
+
+#game-screen{
+
+    display:none;
+
+    padding:10px 12px;
+
+    min-height:100vh;
+
+    overflow-y:auto;
+
+    padding-bottom:15px;
+}
+
+.game-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:7px;
+
+    background:#0f2f1f;
+
+    border:2px solid #ffd700;
+
+    border-radius:15px;
+
+    padding:9px 14px;
+
+    margin-bottom:10px;
+}
+
+.balance{
+
+    color:white;
+
+    font-weight:700;
+
+    font-size:.95rem;
+}
+
+.balance span{
+
+    color:#ffd700;
+
+    font-size:1.15rem;
+}
+
+.bet{
+
+    color:white;
+
+    font-weight:700;
+
+    font-size:1rem;
+}
+
+.bet span{
+
+    color:#20ff00;
+
+    font-size:1.2rem;
+}
+
+.user-badge{
+
+    background:#1a3a2a;
+
+    padding:7px 11px;
+
+    border-radius:20px;
+
+    color:#20ff00;
+
+    font-weight:600;
+
+    font-size:.85rem;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+}
+
+.logout-btn{
+
+    background:transparent;
+
+    border:none;
+
+    color:#ff6666;
+
+    cursor:pointer;
+
+    margin-left:5px;
+
+    font-size:1rem;
+}
+
+
+/* ================= SLOT ================= */
+
+.slot-container{
+
+    max-width:420px;
+
+    margin:0 auto;
+
+    background:#0a1a10;
+
+    border:4px solid #ffd700;
+
+    border-radius:20px;
+
+    padding:11px;
+
+    box-shadow:
+        0 0 30px #ffd70044,
+        inset 0 0 20px #00000088;
+}
+
+
+/* APOSTA */
+
+.slot-container > .bet{
+
+    text-align:center;
+
+    margin-bottom:7px !important;
+
+    font-size:1rem;
+}
+
+
+/* ================= GRID ================= */
+
+.slot-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:7px;
+
+    margin:7px 0 9px;
+}
+
+.slot-cell{
+
+    aspect-ratio:1;
+
+    background:#000;
+
+    border:3px solid #20ff00;
+
+    border-radius:12px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    overflow:hidden;
+
+    transition:.1s;
+}
+
+.slot-cell.spinning{
+
+    animation:
+        shake .1s infinite;
+}
+
+@keyframes shake{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-5px);
+    }
+
+}
+
+.slot-icon{
+
+    width:80%;
+    height:80%;
+
+    object-fit:contain;
+
+    display:block;
+}
+
+
+/* ================= CONTROLES ================= */
+
+.controls{
+
+    margin-top:5px;
+
+    display:flex;
+
+    flex-direction:row;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    width:100%;
+}
+
+
+/* BOTÃO GIRAR */
+
+.btn-spin{
+
+    flex:1;
+
+    max-width:190px;
+
+    background:
+    linear-gradient(
+        90deg,
+        #00aa22,
+        #20ff00
+    );
+
+    color:#000;
+
+    font-size:
+        clamp(1.15rem,5vw,1.4rem);
+
+    font-weight:900;
+
+    padding:12px 8px;
+
+    border-radius:50px;
+
+    border:none;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 4px 0 #006622;
+}
+
+.btn-spin:active{
+
+    transform:translateY(3px);
+
+    box-shadow:
+        0 1px 0 #006622;
+}
+
+.btn-spin:disabled{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+}
+
+
+/* BOTÕES + E - */
+
+.bet-controls{
+
+    display:contents;
+}
+
+.bet-btn{
+
+    flex-shrink:0;
+
+    width:58px;
+
+    height:52px;
+
+    background:#222;
+
+    color:white;
+
+    border:2px solid #20ff00;
+
+    border-radius:10px;
+
+    padding:0;
+
+    font-size:1.5rem;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    box-shadow:
+        0 0 7px #20ff0044;
+}
+
+
+/* ORDEM */
+
+.controls .bet-controls
+.bet-btn:first-child{
+
+    order:1;
+}
+
+.controls .btn-spin{
+
+    order:2;
+}
+
+.controls .bet-controls
+.bet-btn:last-child{
+
+    order:3;
+}
+
+
+/* VENCEU */
+
+.win-text{
+
+    text-align:center;
+
+    color:#ffd700;
+
+    font-weight:900;
+
+    font-size:
+        clamp(1rem,4vw,1.25rem);
+
+    margin-top:8px;
+
+    min-height:28px;
+
+    line-height:1.2;
+
+    text-shadow:
+        0 0 8px #ffd700;
+}
+
+
+/* ================= FALLBACK ================= */
+
+.fallback-card{
+
+    display:none;
+
+    position:absolute;
+
+    top:8%;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:88%;
+
+    max-width:400px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffd700,
+            #cc9900
+        );
+
+    border-radius:20px;
+
+    padding:30px 20px;
+
+    text-align:center;
+
+    border:3px solid #fff;
+
+    box-shadow:
+        0 0 40px #ffd700;
+
+    z-index:2;
+}
+
+.fallback-icon{
+
+    font-size:4rem;
+
+    margin-bottom:10px;
+}
+
+.fallback-title{
+
+    font-size:2.5rem;
+
+    font-weight:900;
+
+    color:#000;
+}
+
+.fallback-sub{
+
+    font-size:1.2rem;
+
+    color:#20ff00;
+
+    font-weight:bold;
+
+    margin-top:5px;
+}
+
+
+/* ================= CELULAR ================= */
+
+@media(max-width:430px){
+
+    #game-screen{
+
+        padding:
+            7px 9px 12px;
+    }
+
+    .game-header{
+
+        padding:
+            8px 11px;
+
+        margin-bottom:8px;
+    }
+
+    .balance{
+
+        font-size:.88rem;
+    }
+
+    .balance span{
+
+        font-size:1.05rem;
+    }
+
+    .user-badge{
+
+        padding:6px 9px;
+
+        font-size:.8rem;
+    }
+
+    .slot-container{
+
+        padding:9px;
+
+        border-width:3px;
+
+        border-radius:18px;
+    }
+
+    .slot-grid{
+
+        gap:6px;
+
+        margin:
+            5px 0 7px;
+    }
+
+    .slot-cell{
+
+        border-width:3px;
+
+        border-radius:10px;
+    }
+
+    .controls{
+
+        gap:6px;
+
+        margin-top:3px;
+    }
+
+    .bet-btn{
+
+        width:52px;
+
+        height:48px;
+
+        font-size:1.35rem;
+    }
+
+    .btn-spin{
+
+        height:52px;
+
+        padding:8px 5px;
+
+        font-size:1.15rem;
+    }
+
+    .win-text{
+
+        font-size:.95rem;
+
+        min-height:25px;
+
+        margin-top:6px;
+    }
+
+}
+
+
+/* ================= CELULAR PEQUENO ================= */
+
+@media(max-width:380px){
+
+    #game-screen{
+
+        padding:
+            5px 7px 10px;
+    }
+
+    .game-header{
+
+        padding:6px 9px;
+    }
+
+    .slot-container{
+
+        padding:7px;
+    }
+
+    .slot-grid{
+
+        gap:5px;
+    }
+
+    .bet-btn{
+
+        width:47px;
+
+        height:44px;
+
+        font-size:1.25rem;
+    }
+
+    .btn-spin{
+
+        height:48px;
+
+        font-size:1.05rem;
+    }
+
+    .win-text{
+
+        font-size:.88rem;
+
+        min-height:22px;
+    }
+
+}
+
+
+/* ================= ALTURA PEQUENA ================= */
+
+@media(max-height:700px){
+
+    #game-screen{
+
+        padding-top:5px;
+    }
+
+    .game-header{
+
+        margin-bottom:6px;
+
+        padding:6px 10px;
+    }
+
+    .slot-container{
+
+        padding:7px;
+    }
+
+    .slot-grid{
+
+        margin:
+            4px 0 6px;
+
+        gap:5px;
+    }
+
+    .controls{
+
+        margin-top:2px;
+    }
+
+    .win-text{
+
+        margin-top:5px;
+
+        min-height:22px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- ================= LOADING ================= -->
+
+<div id="loadingScreen">
+
+    <img
+        class="loadingImage"
+        id="mainLoadingImg"
+        alt="MAEL66 SLOT BR"
+    >
+
+    <div
+        id="imgFallback"
+        class="fallback-card">
+
+        <div class="fallback-icon">
+            🎰
+        </div>
+
+        <div class="fallback-title">
+            MAEL66
+        </div>
+
+        <div class="fallback-sub">
+            SLOT BR
+        </div>
+
+    </div>
+
+    <div class="darkOverlay"></div>
+
+    <div class="loadingBox">
+
+        <h1 class="gameTitle">
+            MAEL66 SLOT BR
+        </h1>
+
+        <p
+            class="status"
+            id="loadStatus">
+
+            Iniciando...
+
+        </p>
+
+        <div class="progressBar">
+
+            <div
+                class="progress"
+                id="loadProgress">
+            </div>
+
+        </div>
+
+        <p
+            class="percent"
+            id="loadPercent">
+
+            0%
+
+        </p>
+
+        <div class="steps">
+
+            <p
+                class="step"
+                id="step1">
+
+                ✓ Carregando recursos
+
+            </p>
+
+            <p
+                class="step"
+                id="step2">
+
+                ✓ Conectando servidor
+
+            </p>
+
+            <p
+                class="step"
+                id="step3">
+
+                ✓ Preparando jogo
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= LOGIN ================= -->
+
+<div
+    id="login-screen"
+    class="auth-screen">
+
+    <div class="auth-card">
+
+        <h2 class="auth-title">
+            🎰 MAEL66
+        </h2>
+
+        <p class="auth-subtitle">
+            SLOT BR
+        </p>
+
+        <h3
+            style="
+            color:white;
+            text-align:center;
+            margin-bottom:20px">
+
+            Entrar na sua conta
+
+        </h3>
+
+        <input
+            type="text"
+            id="login-user"
+            class="input-field"
+            placeholder="Nome de usuário"
+        >
+
+        <input
+            type="password"
+            id="login-pass"
+            class="input-field"
+            placeholder="Senha"
+        >
+
+        <div
+            class="error-msg"
+            id="login-error">
+        </div>
+
+        <button
+            class="btn btn-green"
+            onclick="login()">
+
+            ENTRAR 🟢
+
+        </button>
+
+        <p class="toggle-text">
+
+            Não tem conta?
+
+            <span
+                class="toggle-link"
+                onclick="showRegister()">
+
+                Cadastre-se agora
+
+            </span>
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ================= CADASTRO ================= -->
+
+<div
+    id="register-screen"
+    class="auth-screen">
+
+    <div class="auth-card">
+
+        <h2 class="auth-title">
+            🎰 MAEL66
+        </h2>
+
+        <p class="auth-subtitle">
+            SLOT BR
+        </p>
+
+        <h3
+            style="
+            color:white;
+            text-align:center;
+            margin-bottom:20px">
+
+            Criar nova conta
+
+        </h3>
+
+        <input
+            type="text"
+            id="reg-user"
+            class="input-field"
+            placeholder="Nome de usuário"
+        >
+
+        <input
+            type="email"
+            id="reg-email"
+            class="input-field"
+            placeholder="Seu e-mail"
+        >
+
+        <input
+            type="password"
+            id="reg-pass"
+            class="input-field"
+            placeholder="Senha"
+        >
+
+        <input
+            type="password"
+            id="reg-pass2"
+            class="input-field"
+            placeholder="Confirmar senha"
+        >
+
+        <div
+            class="error-msg"
+            id="reg-error">
+        </div>
+
+        <button
+            class="btn btn-gold"
+            onclick="register()">
+
+            CADASTRAR 🟡
+
+        </button>
+
+        <p class="toggle-text">
+
+            Já tem conta?
+
+            <span
+                class="toggle-link"
+                onclick="showLogin()">
+
+                Fazer login
+
+            </span>
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ================= JOGO ================= -->
+
+<div id="game-screen">
+
+    <div class="game-header">
+
+        <div class="balance">
+
+            💰 Moedas:
+
+            <span id="coins">
+                500
+            </span>
+
+        </div>
+
+
+        <div class="user-badge">
+
+            👤
+
+            <span id="username-display">
+                Jogador
+            </span>
+
+            <button
+                class="logout-btn"
+                onclick="logout()"
+                title="Sair">
+
+                🚪
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="slot-container">
+
+
+        <!-- APOSTA -->
+
+        <div
+            class="bet"
+            style="
+            text-align:center;
+            margin-bottom:10px">
+
+            Aposta:
+
+            <span id="bet-value">
+                10
+            </span>
+
+            moedas
+
+        </div>
+
+
+        <!-- GRID -->
+
+        <div
+            class="slot-grid"
+            id="slot-grid">
+        </div>
+
+
+        <!-- CONTROLES -->
+
+        <div class="controls">
+
+            <div class="bet-controls">
+
+                <button
+                    class="bet-btn"
+                    onclick="changeBet(-5)">
+
+                    −
+
+                </button>
+
+
+                <button
+                    class="bet-btn"
+                    onclick="changeBet(5)">
+
+                    +
+
+                </button>
+
+            </div>
+
+
+            <button
+                class="btn-spin"
+                id="spin-btn"
+                onclick="spin()">
+
+                🎰 GIRAR
+
+            </button>
+
+        </div>
+
+
+        <!-- VITÓRIA -->
+
+        <div
+            class="win-text"
+            id="win-text">
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   SISTEMA DE SOM
+===================================================== */
+
+let audioCtx = null;
+
+
+function iniciarAudio(){
+
+    try{
+
+        if(!audioCtx){
+
+            audioCtx =
+                new (
+                    window.AudioContext ||
+                    window.webkitAudioContext
+                )();
+
+        }
+
+        if(
+            audioCtx.state ===
+            "suspended"
+        ){
+
+            audioCtx.resume();
+
+        }
+
+    }catch(e){
+
+        console.log(
+            "Áudio não disponível:",
+            e
+        );
+
+    }
+
+}
+
+
+function som(
+    frequencia,
+    duracao,
+    tipo="sine",
+    volume=.08
+){
+
+    iniciarAudio();
+
+    if(!audioCtx)
+        return;
+
+
+    const osc =
+        audioCtx.createOscillator();
+
+    const gain =
+        audioCtx.createGain();
+
+
+    osc.type =
+        tipo;
+
+    osc.frequency.value =
+        frequencia;
+
+
+    gain.gain.setValueAtTime(
+        volume,
+        audioCtx.currentTime
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+        .001,
+        audioCtx.currentTime +
+        duracao
+    );
+
+
+    osc.connect(gain);
+
+    gain.connect(
+        audioCtx.destination
+    );
+
+
+    osc.start();
+
+
+    osc.stop(
+        audioCtx.currentTime +
+        duracao
+    );
+
+}
+
+
+/* SOM BOTÃO */
+
+function somBotao(){
+
+    som(
+        520,
+        .08,
+        "square",
+        .05
+    );
+
+}
+
+
+/* SOM GIRO */
+
+function somGiro(){
+
+    som(
+        180 +
+        Math.random()*100,
+
+        .07,
+
+        "square",
+
+        .035
+    );
+
+}
+
+
+/* SOM VITÓRIA */
+
+function somVitoria(){
+
+    iniciarAudio();
+
+    if(!audioCtx)
+        return;
+
+
+    const notas = [
+
+        523,
+        659,
+        784,
+        1046
+
+    ];
+
+
+    notas.forEach(
+        (nota,i)=>{
+
+            setTimeout(
+                ()=>{
+
+                    som(
+                        nota,
+                        .25,
+                        "sine",
+                        .10
+                    );
+
+                },
+
+                i*120
+            );
+
+        }
+    );
+
+}
+
+
+/* SOM DERROTA */
+
+function somDerrota(){
+
+    som(
+        180,
+        .25,
+        "sawtooth",
+        .07
+    );
+
+
+    setTimeout(
+        ()=>{
+
+            som(
+                120,
+                .35,
+                "sawtooth",
+                .05
+            );
+
+        },
+        180
+    );
+
+}
+
+
+/* ATIVA ÁUDIO */
+
+document.addEventListener(
+    "pointerdown",
+
+    function(){
+
+        iniciarAudio();
+
+    },
+
+    {once:true}
+);
+
+
+/* =====================================================
+   IMAGEM LOADING
+===================================================== */
+
+const loadingImg =
+    document.getElementById(
+        'mainLoadingImg'
+    );
+
+
+const fallback =
+    document.getElementById(
+        'imgFallback'
+    );
+
+
+loadingImg.src =
+    "https://i.imgur.com/uh0TtQR.png";
+
+
+loadingImg.onload =
+function(){
+
+    this.style.display =
+        'block';
+
+    fallback.style.display =
+        'none';
+
+};
+
+
+loadingImg.onerror =
+function(){
+
+    this.style.display =
+        'none';
+
+    fallback.style.display =
+        'block';
+
+};
+
+
+/* =====================================================
+   SÍMBOLOS
+===================================================== */
+
+const symbols = [
+
+    {
+        id:'dog',
+        name:'Cachorro',
+
+        img:
+        'https://i.imgur.com/YfevHUQ.png'
+    },
+
+    {
+        id:'wild',
+        name:'Wild',
+
+        emoji:'🌟'
+    },
+
+    {
+        id:'bonus',
+        name:'Bonus',
+
+        emoji:'🎁'
+    },
+
+    /*
+     * NOVA IMAGEM DA MOEDA
+     */
+    {
+        id:'coin',
+        name:'Moeda',
+
+        img:
+        'https://i.imgur.com/MLAxpKm.png'
+    }
+
+];
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+let progress = 0;
+
+
+const progressBar =
+    document.getElementById(
+        'loadProgress'
+    );
+
+
+const percentText =
+    document.getElementById(
+        'loadPercent'
+    );
+
+
+const statusText =
+    document.getElementById(
+        'loadStatus'
+    );
+
+
+const steps = [
+
+    {
+        el:'step1',
+        pct:33
+    },
+
+    {
+        el:'step2',
+        pct:66
+    },
+
+    {
+        el:'step3',
+        pct:100
+    }
+
+];
+
+
+const loadingInterval =
+setInterval(
+()=>{
+
+    progress += 1.5;
+
+
+    if(progress >= 100){
+
+        progress = 100;
+
+        clearInterval(
+            loadingInterval
+        );
+
+    }
+
+
+    progressBar.style.width =
+        progress + '%';
+
+
+    percentText.textContent =
+        Math.round(progress) +
+        '%';
+
+
+    if(progress < 33){
+
+        statusText.textContent =
+            'Carregando recursos...';
+
+    }
+
+    else if(progress < 66){
+
+        statusText.textContent =
+            'Conectando servidor...';
+
+    }
+
+    else{
+
+        statusText.textContent =
+            'Preparando jogo...';
+
+    }
+
+
+    steps.forEach(
+        s=>{
+
+            if(progress >= s.pct){
+
+                document
+                .getElementById(s.el)
+                .classList
+                .add('active');
+
+            }
+
+        }
+    );
+
+
+    if(progress === 100){
+
+        statusText.textContent =
+            'Pronto!';
+
+
+        setTimeout(
+        ()=>{
+
+            document
+            .getElementById(
+                'loadingScreen'
+            )
+            .style.opacity='0';
+
+
+            setTimeout(
+            ()=>{
+
+                document
+                .getElementById(
+                    'loadingScreen'
+                )
+                .style.display='none';
+
+
+                checkLogin();
+
+            },
+            500
+            );
+
+        },
+        600
+        );
+
+    }
+
+},
+80
+);
+
+
+/* =====================================================
+   SISTEMA DO JOGO
+===================================================== */
+
+let user = null;
+
+let coins = 500;
+
+let bet = 10;
+
+let isSpinning = false;
+
+let grid =
+    Array(9).fill(null);
+
+
+let accounts =
+    JSON.parse(
+        localStorage.getItem(
+            'mael66_accounts'
+        ) || '{}'
+    );
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+function checkLogin(){
+
+    const savedUser =
+        localStorage.getItem(
+            'mael66_current_user'
+        );
+
+
+    if(
+        savedUser &&
+        accounts[savedUser]
+    ){
+
+        user =
+            savedUser;
+
+
+        coins =
+            accounts[user].coins ||
+            500;
+
+
+        showGame();
+
+    }
+
+    else{
+
+        showLogin();
+
+    }
+
+}
+
+
+function showLogin(){
+
+    hideAll();
+
+
+    document
+    .getElementById(
+        'login-screen'
+    )
+    .style.display='flex';
+
+
+    clearErrors();
+
+}
+
+
+function showRegister(){
+
+    somBotao();
+
+    hideAll();
+
+
+    document
+    .getElementById(
+        'register-screen'
+    )
+    .style.display='flex';
+
+
+    clearErrors();
+
+}
+
+
+function showGame(){
+
+    hideAll();
+
+
+    document
+    .getElementById(
+        'game-screen'
+    )
+    .style.display='block';
+
+
+    document
+    .getElementById(
+        'username-display'
+    )
+    .textContent =
+        user;
+
+
+    updateUI();
+
+    renderGrid();
+
+}
+
+
+function hideAll(){
+
+    document
+    .getElementById(
+        'login-screen'
+    )
+    .style.display='none';
+
+
+    document
+    .getElementById(
+        'register-screen'
+    )
+    .style.display='none';
+
+
+    document
+    .getElementById(
+        'game-screen'
+    )
+    .style.display='none';
+
+}
+
+
+function clearErrors(){
+
+    document
+    .getElementById(
+        'login-error'
+    )
+    .textContent='';
+
+
+    document
+    .getElementById(
+        'reg-error'
+    )
+    .textContent='';
+
+}
+
+
+function showError(
+    elementId,
+    message
+){
+
+    document
+    .getElementById(
+        elementId
+    )
+    .textContent =
+        message;
+
+}
+
+
+/* =====================================================
+   CADASTRO
+===================================================== */
+
+function register(){
+
+    somBotao();
+
+
+    const userVal =
+        document
+        .getElementById(
+            'reg-user'
+        )
+        .value.trim();
+
+
+    const emailVal =
+        document
+        .getElementById(
+            'reg-email'
+        )
+        .value.trim();
+
+
+    const passVal =
+        document
+        .getElementById(
+            'reg-pass'
+        )
+        .value;
+
+
+    const pass2Val =
+        document
+        .getElementById(
+            'reg-pass2'
+        )
+        .value;
+
+
+    if(!userVal)
+
+        return showError(
+            'reg-error',
+            'Digite seu nome de usuário!'
+        );
+
+
+    if(!emailVal)
+
+        return showError(
+            'reg-error',
+            'Digite seu e-mail!'
+        );
+
+
+    if(!passVal)
+
+        return showError(
+            'reg-error',
+            'Crie uma senha!'
+        );
+
+
+    if(passVal.length < 4)
+
+        return showError(
+            'reg-error',
+            'Mínimo 4 caracteres!'
+        );
+
+
+    if(passVal !== pass2Val)
+
+        return showError(
+            'reg-error',
+            'Senhas não coincidem!'
+        );
+
+
+    if(accounts[userVal])
+
+        return showError(
+            'reg-error',
+            'Usuário já existe!'
+        );
+
+
+    accounts[userVal] = {
+
+        email:emailVal,
+
+        password:passVal,
+
+        coins:500
+
+    };
+
+
+    saveAccounts();
+
+
+    somVitoria();
+
+
+    alert(
+        '✅ Conta criada! Faça login.'
+    );
+
+
+    showLogin();
+
+
+    document
+    .getElementById(
+        'reg-user'
+    )
+    .value='';
+
+
+    document
+    .getElementById(
+        'reg-email'
+    )
+    .value='';
+
+
+    document
+    .getElementById(
+        'reg-pass'
+    )
+    .value='';
+
+
+    document
+    .getElementById(
+        'reg-pass2'
+    )
+    .value='';
+
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+function login(){
+
+    somBotao();
+
+
+    const userVal =
+        document
+        .getElementById(
+            'login-user'
+        )
+        .value.trim();
+
+
+    const passVal =
+        document
+        .getElementById(
+            'login-pass'
+        )
+        .value;
+
+
+    if(!userVal)
+
+        return showError(
+            'login-error',
+            'Digite o usuário!'
+        );
+
+
+    if(!passVal)
+
+        return showError(
+            'login-error',
+            'Digite a senha!'
+        );
+
+
+    if(!accounts[userVal])
+
+        return showError(
+            'login-error',
+            'Usuário não encontrado!'
+        );
+
+
+    if(
+        accounts[userVal].password
+        !== passVal
+    )
+
+        return showError(
+            'login-error',
+            'Senha incorreta!'
+        );
+
+
+    user =
+        userVal;
+
+
+    coins =
+        accounts[user].coins ||
+        500;
+
+
+    localStorage.setItem(
+        'mael66_current_user',
+        user
+    );
+
+
+    document
+    .getElementById(
+        'login-user'
+    )
+    .value='';
+
+
+    document
+    .getElementById(
+        'login-pass'
+    )
+    .value='';
+
+
+    somVitoria();
+
+
+    showGame();
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout(){
+
+    somBotao();
+
+
+    if(
+        user &&
+        accounts[user]
+    ){
+
+        accounts[user].coins =
+            coins;
+
+
+        saveAccounts();
+
+    }
+
+
+    localStorage.removeItem(
+        'mael66_current_user'
+    );
+
+
+    user=null;
+
+    coins=500;
+
+    bet=10;
+
+
+    showLogin();
+
+}
+
+
+/* =====================================================
+   SALVAR
+===================================================== */
+
+function saveAccounts(){
+
+    localStorage.setItem(
+        'mael66_accounts',
+        JSON.stringify(accounts)
+    );
+
+}
+
+
+/* =====================================================
+   ATUALIZAR
+===================================================== */
+
+function updateUI(){
+
+    document
+    .getElementById(
+        'coins'
+    )
+    .textContent =
+        coins;
+
+
+    document
+    .getElementById(
+        'bet-value'
+    )
+    .textContent =
+        bet;
+
+}
+
+
+/* =====================================================
+   APOSTA
+===================================================== */
+
+function changeBet(amount){
+
+    if(isSpinning)
+        return;
+
+
+    somBotao();
+
+
+    const newBet =
+        bet + amount;
+
+
+    if(
+        newBet >= 5 &&
+        newBet <= coins
+    ){
+
+        bet =
+            newBet;
+
+
+        updateUI();
+
+    }
+
+}
+
+
+/* =====================================================
+   RENDERIZAR GRID
+===================================================== */
+
+function renderGrid(){
+
+    const container =
+        document
+        .getElementById(
+            'slot-grid'
+        );
+
+
+    container.innerHTML='';
+
+
+    for(
+        let i=0;
+        i<9;
+        i++
+    ){
+
+        const cell =
+            document.createElement(
+                'div'
+            );
+
+
+        cell.className =
+            'slot-cell';
+
+
+        cell.id =
+            `cell-${i}`;
+
+
+        if(grid[i]){
+
+            if(grid[i].img){
+
+                cell.innerHTML =
+
+                    `<img
+                        src="${grid[i].img}"
+                        class="slot-icon"
+                        alt="${grid[i].name}"
+                        onerror="this.parentElement.innerHTML='🐶'"
+                    >`;
+
+            }
+
+            else{
+
+                cell.innerHTML =
+
+                    `<span
+                        style="font-size:2.5rem">
+
+                        ${grid[i].emoji}
+
+                    </span>`;
+
+            }
+
+        }
+
+
+        container.appendChild(
+            cell
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   GIRO
+===================================================== */
+
+function spin(){
+
+    iniciarAudio();
+
+
+    if(isSpinning)
+        return;
+
+
+    if(coins < bet){
+
+        somDerrota();
+
+
+        return alert(
+            '❌ Moedas insuficientes!'
+        );
+
+    }
+
+
+    isSpinning=true;
+
+
+    coins -= bet;
+
+
+    updateUI();
+
+
+    document
+    .getElementById(
+        'win-text'
+    )
+    .textContent='';
+
+
+    document
+    .getElementById(
+        'spin-btn'
+    )
+    .disabled=true;
+
+
+    let spinCount=0;
+
+    const maxSpins=22;
+
+
+    const spinInterval =
+    setInterval(
+    ()=>{
+
+        somGiro();
+
+
+        for(
+            let i=0;
+            i<9;
+            i++
+        ){
+
+            grid[i] =
+                symbols[
+                    Math.floor(
+                        Math.random()
+                        * symbols.length
+                    )
+                ];
+
+
+            const cell =
+                document
+                .getElementById(
+                    `cell-${i}`
+                );
+
+
+            cell.classList.add(
+                'spinning'
+            );
+
+
+            if(grid[i].img){
+
+                cell.innerHTML =
+
+                    `<img
+                        src="${grid[i].img}"
+                        class="slot-icon"
+                        alt="${grid[i].name}"
+                        onerror="this.parentElement.innerHTML='🐶'"
+                    >`;
+
+            }
+
+            else{
+
+                cell.innerHTML =
+
+                    `<span
+                        style="font-size:2.5rem">
+
+                        ${grid[i].emoji}
+
+                    </span>`;
+
+            }
+
+        }
+
+
+        spinCount++;
+
+
+        if(
+            spinCount >= maxSpins
+        ){
+
+            clearInterval(
+                spinInterval
+            );
+
+
+            for(
+                let i=0;
+                i<9;
+                i++
+            ){
+
+                grid[i] =
+                    symbols[
+                        Math.floor(
+                            Math.random()
+                            * symbols.length
+                        )
+                    ];
+
+
+                const cell =
+                    document
+                    .getElementById(
+                        `cell-${i}`
+                    );
+
+
+                cell.classList.remove(
+                    'spinning'
+                );
+
+
+                if(grid[i].img){
+
+                    cell.innerHTML =
+
+                        `<img
+                            src="${grid[i].img}"
+                            class="slot-icon"
+                            alt="${grid[i].name}"
+                            onerror="this.parentElement.innerHTML='🐶'"
+                        >`;
+
+                }
+
+                else{
+
+                    cell.innerHTML =
+
+                        `<span
+                            style="font-size:2.5rem">
+
+                            ${grid[i].emoji}
+
+                        </span>`;
+
+                }
+
+            }
+
+
+            checkWin();
+
+
+            isSpinning=false;
+
+
+            document
+            .getElementById(
+                'spin-btn'
+            )
+            .disabled=false;
+
+        }
+
+    },
+    90
+    );
+
+}
+
+
+/* =====================================================
+   VERIFICAR PRÊMIO
+===================================================== */
+
+function checkWin(){
+
+    let winAmount=0;
+
+
+    const lines=[
+
+        [0,1,2],
+
+        [3,4,5],
+
+        [6,7,8],
+
+        [0,3,6],
+
+        [1,4,7],
+
+        [2,5,8],
+
+        [0,4,8],
+
+        [2,4,6]
+
+    ];
+
+
+    lines.forEach(
+        line=>{
+
+            const a =
+                grid[line[0]];
+
+            const b =
+                grid[line[1]];
+
+            const c =
+                grid[line[2]];
+
+
+            if(
+                a.id === b.id &&
+                b.id === c.id
+            ){
+
+                if(
+                    a.id === 'dog'
+                )
+
+                    winAmount +=
+                        bet * 5;
+
+
+                else if(
+                    a.id === 'coin'
+                )
+
+                    winAmount +=
+                        bet * 3;
+
+
+                else if(
+                    a.id === 'wild'
+                )
+
+                    winAmount +=
+                        bet * 10;
+
+
+                else if(
+                    a.id === 'bonus'
+                )
+
+                    winAmount +=
+                        bet * 15;
+
+            }
+
+
+            else if(
+
+                a.id === b.id ||
+
+                b.id === c.id ||
+
+                a.id === c.id
+
+            ){
+
+                winAmount +=
+                    Math.floor(
+                        bet * .5
+                    );
+
+            }
+
+        }
+    );
+
+
+    if(winAmount > 0){
+
+        coins +=
+            winAmount;
+
+
+        document
+        .getElementById(
+            'win-text'
+        )
+        .textContent =
+            `🎉 VENCEU! +${winAmount} moedas!`;
+
+
+        somVitoria();
+
+    }
+
+    else{
+
+        document
+        .getElementById(
+            'win-text'
+        )
+        .textContent =
+            'Tente novamente! 🍀';
+
+
+        somDerrota();
+
+    }
+
+
+    updateUI();
+
+
+    if(
+        user &&
+        accounts[user]
+    ){
+
+        accounts[user].coins =
+            coins;
+
+
+        saveAccounts();
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
