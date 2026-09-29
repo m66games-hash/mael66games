@@ -1,1 +1,3551 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no,
+viewport-fit=cover">
+
+<title>MAEL66 HTML RUNNER</title>
+
+<style>
+
+/* =========================================================
+RESET
+========================================================= */
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#020403;
+    color:#fff;
+}
+
+button,
+input,
+textarea{
+    font-family:inherit;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+}
+
+/* =========================================================
+FUNDO
+========================================================= */
+
+body{
+    background:
+        linear-gradient(
+            rgba(0,8,4,.45),
+            rgba(0,8,4,.72)
+        ),
+        url("https://i.imgur.com/WXkRnWF.png");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+}
+
+/* =========================================================
+APP
+========================================================= */
+
+.app{
+    width:100%;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(0,255,70,.08),
+            transparent 35%
+        ),
+        linear-gradient(
+            rgba(0,0,0,.15),
+            rgba(0,0,0,.35)
+        );
+}
+
+/* =========================================================
+HEADER
+========================================================= */
+
+.header{
+    height:72px;
+    width:100%;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:
+        calc(9px + env(safe-area-inset-top))
+        14px
+        9px
+        14px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0,0,0,.94),
+            rgba(0,10,4,.88)
+        );
+
+    border-bottom:
+        1px solid rgba(0,255,70,.38);
+
+    box-shadow:
+        0 0 25px rgba(0,255,70,.10),
+        inset 0 -1px 0 rgba(0,255,70,.12);
+
+    position:relative;
+    z-index:10;
+}
+
+.logoArea{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+}
+
+.logoMini{
+    width:43px;
+    height:43px;
+    min-width:43px;
+
+    border-radius:13px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:19px;
+    font-weight:900;
+
+    color:#001b05;
+
+    background:
+        linear-gradient(
+            145deg,
+            #efffeb,
+            #63ff49 45%,
+            #00a92d
+        );
+
+    box-shadow:
+        0 0 14px rgba(0,255,50,.72),
+        inset 0 0 8px rgba(255,255,255,.85);
+}
+
+.logoText{
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+}
+
+.logoText strong{
+    font-size:17px;
+    letter-spacing:.7px;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.logoText span{
+    margin-top:3px;
+
+    font-size:9px;
+    color:#48ff63;
+    font-weight:bold;
+    letter-spacing:1.3px;
+}
+
+.status{
+    padding:7px 10px;
+
+    border-radius:10px;
+
+    border:
+        1px solid rgba(0,255,70,.42);
+
+    background:
+        rgba(0,255,70,.075);
+
+    color:#65ff74;
+
+    font-size:8px;
+    font-weight:900;
+
+    letter-spacing:.6px;
+
+    white-space:nowrap;
+}
+
+/* =========================================================
+PAGES
+========================================================= */
+
+.page{
+    display:none;
+
+    width:100%;
+    height:calc(100% - 72px);
+
+    overflow-y:auto;
+    overflow-x:hidden;
+
+    scrollbar-width:none;
+}
+
+.page::-webkit-scrollbar{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+/* =========================================================
+HOME
+========================================================= */
+
+.home{
+    width:100%;
+    max-width:720px;
+
+    margin:auto;
+
+    padding:
+        18px
+        14px
+        35px;
+}
+
+.welcome{
+    text-align:center;
+
+    padding:
+        8px 10px 20px;
+}
+
+.welcomeBadge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+
+    padding:6px 10px;
+
+    margin-bottom:10px;
+
+    border-radius:20px;
+
+    background:rgba(0,255,70,.07);
+
+    border:
+        1px solid rgba(0,255,70,.22);
+
+    color:#5cff6b;
+
+    font-size:8px;
+    font-weight:bold;
+
+    letter-spacing:1px;
+}
+
+.welcome h1{
+    margin:0;
+
+    font-size:26px;
+    font-weight:900;
+
+    letter-spacing:.5px;
+
+    text-shadow:
+        0 0 8px #00ff40,
+        0 0 25px rgba(0,255,60,.42);
+}
+
+.welcome p{
+    margin:8px 0 0;
+
+    color:#9ba99f;
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+/* =========================================================
+PAINEL PRINCIPAL
+========================================================= */
+
+.quickPanel{
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:9px;
+
+    margin-bottom:14px;
+}
+
+.quickItem{
+    padding:12px;
+
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(0,255,70,.08),
+            rgba(0,0,0,.48)
+        );
+
+    border:
+        1px solid rgba(0,255,70,.18);
+}
+
+.quickItem span{
+    display:block;
+
+    color:#738178;
+
+    font-size:8px;
+    font-weight:bold;
+
+    letter-spacing:.8px;
+}
+
+.quickItem strong{
+    display:block;
+
+    margin-top:5px;
+
+    color:#67ff76;
+
+    font-size:15px;
+}
+
+/* =========================================================
+BOTÕES
+========================================================= */
+
+.newGameBtn,
+.importBtn{
+    width:100%;
+    min-height:57px;
+
+    border-radius:16px;
+
+    font-size:14px;
+    font-weight:900;
+
+    letter-spacing:.4px;
+
+    margin-bottom:10px;
+
+    transition:
+        transform .15s,
+        filter .15s;
+}
+
+.newGameBtn{
+    color:#001a05;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d9ffd3,
+            #45ff55 45%,
+            #00b936
+        );
+
+    box-shadow:
+        0 0 20px rgba(0,255,50,.28),
+        inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+.importBtn{
+    color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0d3216,
+            #087d2b,
+            #00b938
+        );
+
+    border:
+        1px solid rgba(80,255,110,.42);
+
+    box-shadow:
+        0 0 18px rgba(0,255,60,.14);
+}
+
+.newGameBtn:active,
+.importBtn:active,
+.creatorBtn:active{
+    transform:scale(.98);
+    filter:brightness(.92);
+}
+
+/* =========================================================
+CRIADOR
+========================================================= */
+
+.creatorBtn{
+    width:100%;
+    min-height:46px;
+
+    margin-bottom:21px;
+
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,255,60,.12),
+            rgba(0,70,20,.42)
+        );
+
+    border:
+        1px solid rgba(0,255,70,.3);
+
+    color:#69ff78;
+
+    font-size:10px;
+    font-weight:900;
+
+    letter-spacing:.7px;
+}
+
+/* =========================================================
+BUSCA
+========================================================= */
+
+.searchBox{
+    display:flex;
+    align-items:center;
+
+    width:100%;
+    height:46px;
+
+    margin-bottom:15px;
+
+    padding:0 13px;
+
+    border-radius:13px;
+
+    background:
+        rgba(0,0,0,.62);
+
+    border:
+        1px solid rgba(0,255,70,.2);
+}
+
+.searchIcon{
+    margin-right:8px;
+
+    font-size:15px;
+}
+
+.searchBox input{
+    width:100%;
+    height:100%;
+
+    outline:none;
+    border:0;
+
+    background:transparent;
+
+    color:#fff;
+
+    font-size:12px;
+}
+
+.searchBox input::placeholder{
+    color:#617067;
+}
+
+/* =========================================================
+TÍTULO
+========================================================= */
+
+.sectionTitle{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:10px;
+
+    padding:0 3px;
+}
+
+.sectionTitle strong{
+    font-size:13px;
+}
+
+.sectionTitle span{
+    font-size:9px;
+    color:#58ff6c;
+
+    padding:5px 8px;
+
+    border-radius:8px;
+
+    background:rgba(0,255,70,.07);
+}
+
+/* =========================================================
+LISTA
+========================================================= */
+
+.gamesList{
+    display:flex;
+    flex-direction:column;
+
+    gap:11px;
+}
+
+/* =========================================================
+CARD
+========================================================= */
+
+.gameCard{
+    position:relative;
+
+    display:flex;
+    align-items:center;
+
+    gap:11px;
+
+    padding:12px;
+
+    border-radius:17px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(0,22,9,.94),
+            rgba(0,0,0,.91)
+        );
+
+    border:
+        1px solid rgba(0,255,70,.23);
+
+    box-shadow:
+        0 6px 20px rgba(0,0,0,.48),
+        inset 0 0 25px rgba(0,255,50,.025);
+
+    overflow:hidden;
+}
+
+.gameCard::before{
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    top:0;
+    bottom:0;
+
+    width:3px;
+
+    background:
+        linear-gradient(
+            #00ff40,
+            transparent
+        );
+
+    opacity:.7;
+}
+
+.gameIcon{
+    width:57px;
+    height:57px;
+
+    min-width:57px;
+
+    border-radius:15px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:27px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,255,70,.15),
+            rgba(0,0,0,.8)
+        );
+
+    border:
+        1px solid rgba(0,255,70,.32);
+
+    box-shadow:
+        inset 0 0 15px rgba(0,255,70,.05);
+}
+
+.gameInfo{
+    flex:1;
+    min-width:0;
+}
+
+.gameInfo strong{
+    display:block;
+
+    font-size:14px;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.gameInfo small{
+    display:block;
+
+    margin-top:5px;
+
+    color:#708076;
+
+    font-size:9px;
+}
+
+.importTag{
+    display:inline-block;
+
+    margin-top:6px;
+
+    padding:3px 6px;
+
+    border-radius:6px;
+
+    background:rgba(0,255,70,.07);
+
+    color:#54ff68;
+
+    font-size:7px;
+    font-weight:bold;
+}
+
+.gameActions{
+    display:flex;
+    flex-direction:column;
+
+    gap:5px;
+}
+
+.actionBtn{
+    min-width:51px;
+    height:31px;
+
+    border-radius:9px;
+
+    font-size:9px;
+    font-weight:bold;
+
+    transition:.15s;
+}
+
+.actionBtn:active{
+    transform:scale(.94);
+}
+
+.playBtn{
+    background:#00b92f;
+    color:#fff;
+
+    box-shadow:
+        0 0 10px rgba(0,255,50,.16);
+}
+
+.editBtn{
+    background:#12391b;
+    color:#65ff73;
+}
+
+.deleteBtn{
+    background:#301010;
+    color:#ff6a6a;
+}
+
+/* =========================================================
+VAZIO
+========================================================= */
+
+.empty{
+    padding:42px 20px;
+
+    text-align:center;
+
+    border-radius:18px;
+
+    background:
+        rgba(0,0,0,.52);
+
+    border:
+        1px dashed rgba(0,255,70,.23);
+}
+
+.emptyIcon{
+    font-size:48px;
+
+    margin-bottom:11px;
+
+    filter:
+        drop-shadow(
+            0 0 8px
+            rgba(0,255,60,.3)
+        );
+}
+
+.empty strong{
+    display:block;
+
+    font-size:16px;
+}
+
+.empty p{
+    margin:8px auto 0;
+
+    max-width:290px;
+
+    color:#78857d;
+
+    font-size:11px;
+
+    line-height:1.5;
+}
+
+/* =========================================================
+EDITOR
+========================================================= */
+
+.editorPage{
+    width:100%;
+    max-width:900px;
+
+    margin:auto;
+
+    padding:15px 13px 30px;
+}
+
+.editorHeader{
+    display:flex;
+    align-items:center;
+
+    gap:11px;
+
+    margin-bottom:17px;
+}
+
+.backBtn{
+    width:43px;
+    height:43px;
+
+    min-width:43px;
+
+    border-radius:12px;
+
+    background:
+        rgba(0,255,60,.09);
+
+    border:
+        1px solid rgba(0,255,60,.3);
+
+    color:#54ff68;
+
+    font-size:23px;
+}
+
+.editorTitle{
+    min-width:0;
+}
+
+.editorTitle strong{
+    display:block;
+
+    font-size:17px;
+}
+
+.editorTitle span{
+    display:block;
+
+    margin-top:3px;
+
+    color:#758279;
+
+    font-size:9px;
+}
+
+/* =========================================================
+LABEL
+========================================================= */
+
+.label{
+    display:block;
+
+    margin-bottom:7px;
+
+    color:#5aff6b;
+
+    font-size:9px;
+    font-weight:bold;
+
+    letter-spacing:1px;
+}
+
+.nameInput{
+    width:100%;
+    height:51px;
+
+    padding:0 14px;
+
+    color:#fff;
+
+    font-size:13px;
+    font-weight:bold;
+
+    outline:none;
+
+    border-radius:13px;
+
+    border:
+        1px solid rgba(0,255,70,.25);
+
+    background:
+        rgba(0,0,0,.72);
+
+    margin-bottom:14px;
+}
+
+.nameInput:focus{
+    border-color:#00ff40;
+
+    box-shadow:
+        0 0 12px rgba(0,255,60,.13);
+}
+
+/* =========================================================
+CODE
+========================================================= */
+
+.codeBox{
+    border-radius:16px;
+
+    overflow:hidden;
+
+    background:
+        rgba(0,0,0,.84);
+
+    border:
+        1px solid rgba(0,255,70,.27);
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.3);
+}
+
+.codeTop{
+    min-height:44px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 12px;
+
+    border-bottom:
+        1px solid rgba(0,255,70,.14);
+}
+
+.codeTop strong{
+    font-size:10px;
+    color:#65ff73;
+}
+
+.codeTop span{
+    color:#637267;
+    font-size:8px;
+}
+
+textarea{
+    width:100%;
+    height:390px;
+
+    display:block;
+
+    resize:none;
+
+    padding:14px;
+
+    outline:none;
+    border:0;
+
+    background:#020503;
+
+    color:#d9ffe0;
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+
+    font-size:11px;
+
+    line-height:1.55;
+}
+
+textarea::selection{
+    background:#00a92d;
+    color:#fff;
+}
+
+/* =========================================================
+EDITOR BUTTONS
+========================================================= */
+
+.editorButtons{
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:8px;
+
+    padding:10px;
+}
+
+.editorButton{
+    min-height:46px;
+
+    border-radius:11px;
+
+    font-size:10px;
+    font-weight:900;
+}
+
+.saveBtn{
+    grid-column:1/-1;
+
+    background:
+        linear-gradient(
+            135deg,
+            #aaff9f,
+            #00d936
+        );
+
+    color:#001a04;
+
+    box-shadow:
+        0 0 13px rgba(0,255,50,.18);
+}
+
+.exampleBtn{
+    background:#123719;
+
+    color:#63ff72;
+}
+
+.clearBtn{
+    background:#301313;
+
+    color:#ff7373;
+}
+
+/* =========================================================
+FOOTER
+========================================================= */
+
+.footer{
+    text-align:center;
+
+    padding:
+        8px
+        10px
+        calc(14px + env(safe-area-inset-bottom));
+
+    color:#506057;
+
+    font-size:7px;
+
+    letter-spacing:1px;
+}
+
+/* =========================================================
+GAME SCREEN
+========================================================= */
+
+.gameScreen{
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:100;
+
+    background:#000;
+}
+
+.gameScreen.active{
+    display:flex;
+
+    flex-direction:column;
+}
+
+.gameHeader{
+    height:53px;
+    min-height:53px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:
+        0
+        9px
+        0
+        12px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #050806,
+            #020402
+        );
+
+    border-bottom:
+        1px solid rgba(0,255,60,.4);
+}
+
+.gameRunningName{
+    max-width:55%;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+
+    font-size:12px;
+
+    font-weight:bold;
+}
+
+.gameControls{
+    display:flex;
+
+    gap:6px;
+}
+
+.gameControl{
+    height:34px;
+
+    border-radius:9px;
+
+    padding:0 10px;
+
+    font-size:9px;
+
+    font-weight:bold;
+}
+
+.fullBtn{
+    background:#123b18;
+    color:#65ff73;
+}
+
+.closeBtn{
+    background:#501515;
+    color:#fff;
+}
+
+.gameFrame{
+    width:100%;
+
+    height:calc(100% - 53px);
+
+    border:0;
+
+    background:#fff;
+
+    display:block;
+}
+
+/* =========================================================
+MODAIS
+========================================================= */
+
+.modal,
+.creatorModal{
+    position:fixed;
+
+    inset:0;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    backdrop-filter:blur(8px);
+}
+
+.modal{
+    z-index:200;
+
+    background:rgba(0,0,0,.78);
+}
+
+.creatorModal{
+    z-index:250;
+
+    background:rgba(0,0,0,.82);
+}
+
+.modal.active,
+.creatorModal.active{
+    display:flex;
+}
+
+.modalBox,
+.creatorBox{
+    width:100%;
+
+    max-width:370px;
+
+    border-radius:21px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #07100a,
+            #010201
+        );
+
+    border:
+        1px solid rgba(0,255,70,.38);
+
+    box-shadow:
+        0 0 40px rgba(0,255,60,.15);
+
+    animation:
+        modalIn .2s ease;
+}
+
+@keyframes modalIn{
+
+    from{
+        opacity:0;
+        transform:scale(.94);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+
+}
+
+.modalBox{
+    padding:22px;
+}
+
+.modalBox h2{
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+.modalBox p{
+    margin:0 0 20px;
+
+    color:#89968c;
+
+    font-size:11px;
+
+    line-height:1.5;
+}
+
+.modalButtons{
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:8px;
+}
+
+.modalButtons button{
+    height:45px;
+
+    border-radius:11px;
+
+    font-size:10px;
+
+    font-weight:bold;
+}
+
+.modalCancel{
+    background:#142018;
+
+    color:#76ff83;
+}
+
+.modalOk{
+    background:#bd2929;
+
+    color:#fff;
+}
+
+/* =========================================================
+CRIADOR
+========================================================= */
+
+.creatorBox{
+    padding:24px 20px;
+
+    text-align:center;
+}
+
+.creatorIcon{
+    width:72px;
+    height:72px;
+
+    margin:0 auto 12px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:21px;
+
+    font-size:31px;
+    font-weight:900;
+
+    color:#001b05;
+
+    background:
+        linear-gradient(
+            145deg,
+            #d6ffd0,
+            #38ff4e 50%,
+            #00a82d
+        );
+
+    box-shadow:
+        0 0 22px rgba(0,255,60,.4);
+}
+
+.creatorBox h2{
+    margin:0;
+
+    font-size:20px;
+
+    text-shadow:
+        0 0 8px #00ff40;
+}
+
+.creatorSubtitle{
+    margin:6px 0 18px;
+
+    color:#5cff6b;
+
+    font-size:8px;
+    font-weight:bold;
+
+    letter-spacing:1.5px;
+}
+
+.creatorInfo{
+    text-align:left;
+
+    padding:14px;
+
+    margin-bottom:17px;
+
+    border-radius:15px;
+
+    background:
+        rgba(0,255,60,.04);
+
+    border:
+        1px solid rgba(0,255,70,.17);
+}
+
+.creatorInfo div{
+    display:flex;
+
+    gap:9px;
+
+    margin:10px 0;
+
+    color:#b9c8bd;
+
+    font-size:11px;
+}
+
+.creatorInfo strong{
+    color:#65ff73;
+}
+
+.creatorClose{
+    width:100%;
+    height:45px;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #9cff91,
+            #00d936
+        );
+
+    color:#001804;
+
+    font-size:10px;
+    font-weight:900;
+}
+
+/* =========================================================
+TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+
+    left:50%;
+    bottom:
+        calc(25px + env(safe-area-inset-bottom));
+
+    transform:
+        translate(-50%,20px);
+
+    z-index:500;
+
+    width:max-content;
+    max-width:90%;
+
+    padding:11px 17px;
+
+    border-radius:12px;
+
+    background:#071c0b;
+
+    border:
+        1px solid #00ff40;
+
+    color:#75ff82;
+
+    font-size:10px;
+    font-weight:bold;
+
+    box-shadow:
+        0 0 20px rgba(0,255,60,.25);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.25s ease;
+}
+
+.toast.show{
+    opacity:1;
+
+    transform:
+        translate(-50%,0);
+}
+
+/* =========================================================
+LOADING
+========================================================= */
+
+.loadingScreen{
+    position:fixed;
+
+    inset:0;
+
+    z-index:9999;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+
+    background:#000;
+
+    transition:
+        opacity .7s ease,
+        visibility .7s ease;
+}
+
+.loadingScreen.hide{
+    opacity:0;
+
+    visibility:hidden;
+}
+
+.loadingBackground{
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+        linear-gradient(
+            rgba(0,0,0,.28),
+            rgba(0,0,0,.7)
+        ),
+        url("https://i.imgur.com/WXkRnWF.png");
+
+    background-size:cover;
+
+    background-position:center;
+
+    filter:
+        brightness(.53)
+        saturate(1.2);
+}
+
+.loadingContent{
+    position:relative;
+
+    z-index:2;
+
+    width:90%;
+
+    max-width:380px;
+
+    text-align:center;
+}
+
+.loadingLogo{
+    width:min(270px,72vw);
+
+    max-height:270px;
+
+    object-fit:contain;
+
+    border-radius:25px;
+
+    filter:
+        drop-shadow(
+            0 0 15px
+            rgba(0,255,60,.55)
+        );
+
+    animation:
+        loadingPulse 1.8s
+        ease-in-out infinite;
+}
+
+.loadingTitle{
+    margin-top:17px;
+
+    font-size:20px;
+
+    font-weight:900;
+
+    letter-spacing:2px;
+
+    text-shadow:
+        0 0 8px #00ff40;
+}
+
+.loadingSubtitle{
+    margin-top:6px;
+
+    font-size:8px;
+
+    letter-spacing:1.5px;
+
+    color:#58ff6b;
+}
+
+.loadingBarBox{
+    width:100%;
+
+    height:7px;
+
+    margin-top:25px;
+
+    overflow:hidden;
+
+    border-radius:20px;
+
+    background:rgba(255,255,255,.08);
+
+    border:
+        1px solid rgba(0,255,60,.25);
+}
+
+.loadingBar{
+    width:0%;
+
+    height:100%;
+
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #00a82d,
+            #9dff8c,
+            #00ff3c
+        );
+}
+
+.loadingPercent{
+    margin-top:9px;
+
+    color:#5cff6b;
+
+    font-size:10px;
+
+    font-weight:bold;
+}
+
+.loadingStatus{
+    margin-top:10px;
+
+    color:#748078;
+
+    font-size:8px;
+}
+
+@keyframes loadingPulse{
+
+    0%,100%{
+        transform:scale(.97);
+    }
+
+    50%{
+        transform:scale(1.02);
+    }
+
+}
+
+/* =========================================================
+RESPONSIVO
+========================================================= */
+
+@media(max-width:380px){
+
+    .header{
+        height:66px;
+    }
+
+    .page{
+        height:calc(100% - 66px);
+    }
+
+    .logoText strong{
+        font-size:14px;
+    }
+
+    .logoText span{
+        font-size:7px;
+    }
+
+    .status{
+        font-size:7px;
+        padding:6px 7px;
+    }
+
+    .welcome h1{
+        font-size:23px;
+    }
+
+    textarea{
+        height:330px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =====================================================
+LOADING
+===================================================== -->
+
+<div
+    class="loadingScreen"
+    id="loadingScreen">
+
+    <div class="loadingBackground"></div>
+
+    <div class="loadingContent">
+
+        <img
+            class="loadingLogo"
+            src="https://i.imgur.com/ROJY53U.png"
+            alt="MAEL66">
+
+        <div class="loadingTitle">
+            MAEL66 HTML RUNNER
+        </div>
+
+        <div class="loadingSubtitle">
+            CARREGANDO SUA BIBLIOTECA DE JOGOS
+        </div>
+
+        <div class="loadingBarBox">
+
+            <div
+                class="loadingBar"
+                id="loadingBar">
+            </div>
+
+        </div>
+
+        <div
+            class="loadingPercent"
+            id="loadingPercent">
+
+            0%
+
+        </div>
+
+        <div class="loadingStatus">
+            PREPARANDO O SISTEMA...
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+APP
+===================================================== -->
+
+<div class="app">
+
+<header class="header">
+
+    <div class="logoArea">
+
+        <div class="logoMini">
+            66
+        </div>
+
+        <div class="logoText">
+
+            <strong>
+                MAEL66 HTML RUNNER
+            </strong>
+
+            <span>
+                SUA BIBLIOTECA DE JOGOS
+            </span>
+
+        </div>
+
+    </div>
+
+    <div
+        class="status"
+        id="status">
+
+        PRONTO
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+HOME
+===================================================== -->
+
+<section
+    class="page active"
+    id="homePage">
+
+    <div class="home">
+
+        <div class="welcome">
+
+            <div class="welcomeBadge">
+                🟢 SISTEMA ONLINE
+            </div>
+
+            <h1>
+                🎮 MEUS JOGOS
+            </h1>
+
+            <p>
+                Sua biblioteca pessoal de jogos HTML.
+                Salve, edite e jogue diretamente no celular.
+            </p>
+
+        </div>
+
+
+        <div class="quickPanel">
+
+            <div class="quickItem">
+
+                <span>
+                    JOGOS SALVOS
+                </span>
+
+                <strong id="quickGames">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="quickItem">
+
+                <span>
+                    SISTEMA
+                </span>
+
+                <strong>
+                    ONLINE
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="newGameBtn"
+            onclick="newGame()">
+
+            ＋ NOVO JOGO HTML
+
+        </button>
+
+
+        <button
+            class="importBtn"
+            onclick="openFilePicker()">
+
+            📂 LER ARQUIVO HTML
+
+        </button>
+
+
+        <input
+            type="file"
+            id="htmlFile"
+            accept=".html,.htm,.txt,text/html,text/plain"
+            style="display:none;">
+
+
+        <button
+            class="creatorBtn"
+            onclick="openCreatorInfo()">
+
+            ℹ️ INFORMAÇÕES DO CRIADOR
+
+        </button>
+
+
+        <div class="searchBox">
+
+            <span class="searchIcon">
+                🔎
+            </span>
+
+            <input
+                id="searchInput"
+                type="text"
+                autocomplete="off"
+                placeholder="Pesquisar jogo...">
+
+        </div>
+
+
+        <div class="sectionTitle">
+
+            <strong>
+                📚 BIBLIOTECA
+            </strong>
+
+            <span id="gameTotal">
+                0 jogos
+            </span>
+
+        </div>
+
+
+        <div
+            class="gamesList"
+            id="gamesList">
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+
+        MAEL66 HTML RUNNER • COLE • SALVE • JOGUE
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+EDITOR
+===================================================== -->
+
+<section
+    class="page"
+    id="editorPage">
+
+    <div class="editorPage">
+
+        <div class="editorHeader">
+
+            <button
+                class="backBtn"
+                onclick="goHome()">
+
+                ←
+
+            </button>
+
+            <div class="editorTitle">
+
+                <strong id="editorHeading">
+                    NOVO JOGO
+                </strong>
+
+                <span>
+                    Cole ou importe seu código HTML completo
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <label class="label">
+            NOME DO JOGO
+        </label>
+
+        <input
+            id="gameName"
+            class="nameInput"
+            type="text"
+            maxlength="50"
+            placeholder="Ex.: MAEL66 SLOT">
+
+
+        <div class="codeBox">
+
+            <div class="codeTop">
+
+                <strong>
+                    📄 CÓDIGO HTML
+                </strong>
+
+                <span id="charCount">
+                    0 caracteres
+                </span>
+
+            </div>
+
+
+            <textarea
+                id="code"
+                spellcheck="false"
+                placeholder="Cole aqui o código HTML completo do seu jogo..."></textarea>
+
+
+            <div class="editorButtons">
+
+                <button
+                    class="editorButton saveBtn"
+                    onclick="saveGame()">
+
+                    💾 SALVAR JOGO
+
+                </button>
+
+
+                <button
+                    class="editorButton exampleBtn"
+                    onclick="loadExample()">
+
+                    🧪 EXEMPLO
+
+                </button>
+
+
+                <button
+                    class="editorButton clearBtn"
+                    onclick="clearEditor()">
+
+                    🗑 LIMPAR
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+
+        COLE • SALVE • JOGUE • VOLTE QUANDO QUISER
+
+    </div>
+
+</section>
+
+</div>
+
+
+<!-- =====================================================
+TELA DO JOGO
+===================================================== -->
+
+<div
+    class="gameScreen"
+    id="gameScreen">
+
+    <div class="gameHeader">
+
+        <div
+            class="gameRunningName"
+            id="gameRunningName">
+
+            JOGO
+
+        </div>
+
+        <div class="gameControls">
+
+            <button
+                class="gameControl fullBtn"
+                onclick="toggleFullscreen()">
+
+                ⛶ TELA CHEIA
+
+            </button>
+
+            <button
+                class="gameControl closeBtn"
+                onclick="closeGame()">
+
+                ✕ SAIR
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <iframe
+        id="gameFrame"
+        class="gameFrame"
+        sandbox="allow-scripts allow-forms allow-modals allow-pointer-lock allow-same-origin">
+    </iframe>
+
+</div>
+
+
+<!-- =====================================================
+MODAL EXCLUIR
+===================================================== -->
+
+<div
+    class="modal"
+    id="deleteModal">
+
+    <div class="modalBox">
+
+        <h2>
+            🗑️ Excluir jogo?
+        </h2>
+
+        <p id="deleteText">
+            Este jogo será removido da biblioteca.
+        </p>
+
+        <div class="modalButtons">
+
+            <button
+                class="modalCancel"
+                onclick="closeDeleteModal()">
+
+                CANCELAR
+
+            </button>
+
+            <button
+                class="modalOk"
+                onclick="confirmDelete()">
+
+                EXCLUIR
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+MODAL CRIADOR
+===================================================== -->
+
+<div
+    class="creatorModal"
+    id="creatorModal">
+
+    <div class="creatorBox">
+
+        <div class="creatorIcon">
+            66
+        </div>
+
+        <h2>
+            MAEL66
+        </h2>
+
+        <div class="creatorSubtitle">
+            CRIADOR • COMPOSITOR • PRODUTOR
+        </div>
+
+        <div class="creatorInfo">
+
+            <div>
+                👤
+                <span>
+                    <strong>Criador:</strong>
+                    MAEL66
+                </span>
+            </div>
+
+            <div>
+                🎮
+                <span>
+                    <strong>Projeto:</strong>
+                    MAEL66 HTML RUNNER
+                </span>
+            </div>
+
+            <div>
+                💻
+                <span>
+                    <strong>Desenvolvimento:</strong>
+                    MAEL66
+                </span>
+            </div>
+
+            <div>
+                🎵
+                <span>
+                    <strong>Área:</strong>
+                    Música e Desenvolvimento
+                </span>
+            </div>
+
+        </div>
+
+        <button
+            class="creatorClose"
+            onclick="closeCreatorInfo()">
+
+            FECHAR
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+TOAST
+===================================================== -->
+
+<div
+    class="toast"
+    id="toast">
+
+    Salvo!
+
+</div>
+
+
+<script>
+
+/* =========================================================
+CONFIGURAÇÃO
+========================================================= */
+
+const STORAGE_KEY =
+    "MAEL66_HTML_RUNNER_GAMES";
+
+
+/* =========================================================
+ELEMENTOS
+========================================================= */
+
+const homePage =
+    document.getElementById("homePage");
+
+const editorPage =
+    document.getElementById("editorPage");
+
+const gamesList =
+    document.getElementById("gamesList");
+
+const gameTotal =
+    document.getElementById("gameTotal");
+
+const quickGames =
+    document.getElementById("quickGames");
+
+const gameName =
+    document.getElementById("gameName");
+
+const code =
+    document.getElementById("code");
+
+const charCount =
+    document.getElementById("charCount");
+
+const editorHeading =
+    document.getElementById("editorHeading");
+
+const status =
+    document.getElementById("status");
+
+const gameScreen =
+    document.getElementById("gameScreen");
+
+const gameFrame =
+    document.getElementById("gameFrame");
+
+const gameRunningName =
+    document.getElementById("gameRunningName");
+
+const deleteModal =
+    document.getElementById("deleteModal");
+
+const deleteText =
+    document.getElementById("deleteText");
+
+const creatorModal =
+    document.getElementById("creatorModal");
+
+const toast =
+    document.getElementById("toast");
+
+const loadingScreen =
+    document.getElementById("loadingScreen");
+
+const loadingPercent =
+    document.getElementById("loadingPercent");
+
+const loadingBar =
+    document.getElementById("loadingBar");
+
+const htmlFile =
+    document.getElementById("htmlFile");
+
+const searchInput =
+    document.getElementById("searchInput");
+
+
+/* =========================================================
+VARIÁVEIS
+========================================================= */
+
+let games = [];
+
+let editingId = null;
+
+let deletingId = null;
+
+let toastTimer = null;
+
+
+/* =========================================================
+CARREGAR JOGOS
+========================================================= */
+
+function loadGames(){
+
+    try{
+
+        const saved =
+            localStorage.getItem(STORAGE_KEY);
+
+        games =
+            saved
+            ? JSON.parse(saved)
+            : [];
+
+        if(!Array.isArray(games)){
+            games = [];
+        }
+
+    }catch(error){
+
+        games = [];
+
+    }
+
+    renderGames();
+
+}
+
+
+/* =========================================================
+SALVAR BIBLIOTECA
+========================================================= */
+
+function saveLibrary(){
+
+    try{
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(games)
+        );
+
+    }catch(error){
+
+        alert(
+            "Não foi possível salvar os jogos neste dispositivo."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+RENDERIZAR
+========================================================= */
+
+function renderGames(){
+
+    const search =
+        searchInput
+        ? searchInput.value
+            .trim()
+            .toLowerCase()
+        : "";
+
+    const filtered =
+        games.filter(game =>
+            String(game.name || "")
+                .toLowerCase()
+                .includes(search)
+        );
+
+
+    gameTotal.textContent =
+        games.length +
+        (
+            games.length === 1
+            ? " jogo"
+            : " jogos"
+        );
+
+
+    quickGames.textContent =
+        games.length;
+
+
+    if(filtered.length === 0){
+
+        if(games.length > 0 && search){
+
+            gamesList.innerHTML = `
+
+                <div class="empty">
+
+                    <div class="emptyIcon">
+                        🔎
+                    </div>
+
+                    <strong>
+                        NENHUM JOGO ENCONTRADO
+                    </strong>
+
+                    <p>
+                        Tente pesquisar usando outro nome.
+                    </p>
+
+                </div>
+
+            `;
+
+        }else{
+
+            gamesList.innerHTML = `
+
+                <div class="empty">
+
+                    <div class="emptyIcon">
+                        🎮
+                    </div>
+
+                    <strong>
+                        SUA BIBLIOTECA ESTÁ VAZIA
+                    </strong>
+
+                    <p>
+                        Toque em "LER ARQUIVO HTML"
+                        para importar um jogo do celular.
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+        return;
+
+    }
+
+
+    gamesList.innerHTML =
+        filtered
+        .map(game => `
+
+            <div class="gameCard">
+
+                <div class="gameIcon">
+                    ${chooseIcon(game.name)}
+                </div>
+
+                <div class="gameInfo">
+
+                    <strong>
+                        ${escapeHtml(game.name)}
+                    </strong>
+
+                    <small>
+                        ${escapeHtml(game.date || "Jogo salvo")}
+                    </small>
+
+                    ${
+                        game.imported
+                        ? `
+                            <span class="importTag">
+                                IMPORTADO
+                            </span>
+                        `
+                        : ""
+                    }
+
+                </div>
+
+                <div class="gameActions">
+
+                    <button
+                        class="actionBtn playBtn"
+                        onclick="playGame('${game.id}')">
+
+                        ▶ JOGAR
+
+                    </button>
+
+                    <button
+                        class="actionBtn editBtn"
+                        onclick="editGame('${game.id}')">
+
+                        ✏️ EDITAR
+
+                    </button>
+
+                    <button
+                        class="actionBtn deleteBtn"
+                        onclick="askDelete('${game.id}')">
+
+                        🗑
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        `)
+        .join("");
+
+}
+
+
+/* =========================================================
+ESCAPAR HTML
+========================================================= */
+
+function escapeHtml(text){
+
+    return String(text)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+NOVO JOGO
+========================================================= */
+
+function newGame(){
+
+    editingId = null;
+
+    editorHeading.textContent =
+        "NOVO JOGO";
+
+    gameName.value = "";
+
+    code.value = "";
+
+    updateCounter();
+
+    showEditor();
+
+}
+
+
+/* =========================================================
+ABRIR EDITOR
+========================================================= */
+
+function showEditor(){
+
+    homePage.classList.remove("active");
+
+    editorPage.classList.add("active");
+
+    status.textContent =
+        "EDITOR";
+
+    setTimeout(
+        () => gameName.focus(),
+        100
+    );
+
+}
+
+
+/* =========================================================
+VOLTAR
+========================================================= */
+
+function goHome(){
+
+    editingId = null;
+
+    editorPage.classList.remove("active");
+
+    homePage.classList.add("active");
+
+    status.textContent =
+        "PRONTO";
+
+    renderGames();
+
+}
+
+
+/* =========================================================
+EDITAR
+========================================================= */
+
+function editGame(id){
+
+    const game =
+        games.find(
+            item => item.id === id
+        );
+
+    if(!game) return;
+
+    editingId = id;
+
+    editorHeading.textContent =
+        "EDITAR JOGO";
+
+    gameName.value =
+        game.name;
+
+    code.value =
+        game.code;
+
+    updateCounter();
+
+    showEditor();
+
+}
+
+
+/* =========================================================
+SALVAR
+========================================================= */
+
+function saveGame(){
+
+    const name =
+        gameName.value.trim();
+
+    const html =
+        code.value.trim();
+
+
+    if(!name){
+
+        alert(
+            "Digite um nome para o jogo."
+        );
+
+        gameName.focus();
+
+        return;
+
+    }
+
+
+    if(!html){
+
+        alert(
+            "Cole o código HTML do jogo."
+        );
+
+        code.focus();
+
+        return;
+
+    }
+
+
+    if(editingId){
+
+        const index =
+            games.findIndex(
+                item => item.id === editingId
+            );
+
+        if(index !== -1){
+
+            games[index].name =
+                name;
+
+            games[index].code =
+                html;
+
+            games[index].date =
+                getDate();
+
+        }
+
+        showToast(
+            "✅ Jogo atualizado!"
+        );
+
+    }else{
+
+        games.unshift({
+
+            id:
+                Date.now().toString(),
+
+            name:
+                name,
+
+            code:
+                html,
+
+            date:
+                getDate(),
+
+            imported:
+                false
+
+        });
+
+        showToast(
+            "✅ Jogo salvo!"
+        );
+
+    }
+
+
+    saveLibrary();
+
+    renderGames();
+
+    setTimeout(
+        () => goHome(),
+        500
+    );
+
+}
+
+
+/* =========================================================
+IMPORTAR ARQUIVO
+========================================================= */
+
+function openFilePicker(){
+
+    htmlFile.value = "";
+
+    htmlFile.click();
+
+}
+
+
+htmlFile.addEventListener(
+    "change",
+    handleHtmlFile
+);
+
+
+function handleHtmlFile(event){
+
+    const file =
+        event.target.files[0];
+
+
+    if(!file)
+        return;
+
+
+    const extension =
+        file.name
+        .split(".")
+        .pop()
+        .toLowerCase();
+
+
+    if(
+        extension !== "html" &&
+        extension !== "htm" &&
+        extension !== "txt"
+    ){
+
+        alert(
+            "Selecione um arquivo HTML, HTM ou TXT."
+        );
+
+        return;
+
+    }
+
+
+    status.textContent =
+        "LENDO ARQUIVO";
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(){
+
+            const html =
+                String(
+                    reader.result || ""
+                );
+
+
+            if(!html.trim()){
+
+                alert(
+                    "O arquivo está vazio."
+                );
+
+                status.textContent =
+                    "PRONTO";
+
+                return;
+
+            }
+
+
+            let detectedTitle =
+                extractHtmlTitle(html);
+
+
+            if(!detectedTitle){
+
+                detectedTitle =
+                    file.name
+                    .replace(
+                        /\.(html|htm|txt)$/i,
+                        ""
+                    )
+                    .trim();
+
+            }
+
+
+            if(!detectedTitle){
+
+                detectedTitle =
+                    "JOGO HTML";
+
+            }
+
+
+            games.unshift({
+
+                id:
+                    Date.now().toString(),
+
+                name:
+                    detectedTitle,
+
+                code:
+                    html,
+
+                date:
+                    getDate(),
+
+                imported:
+                    true,
+
+                fileName:
+                    file.name
+
+            });
+
+
+            saveLibrary();
+
+            renderGames();
+
+
+            status.textContent =
+                "PRONTO";
+
+
+            showToast(
+                "📂 Jogo importado com sucesso!"
+            );
+
+        };
+
+
+    reader.onerror =
+        function(){
+
+            status.textContent =
+                "ERRO";
+
+            alert(
+                "Não foi possível ler esse arquivo."
+            );
+
+        };
+
+
+    reader.readAsText(
+        file,
+        "UTF-8"
+    );
+
+}
+
+
+/* =========================================================
+PEGAR TITLE
+========================================================= */
+
+function extractHtmlTitle(html){
+
+    const match =
+        html.match(
+            /<title[^>]*>([\s\S]*?)<\/title>/i
+        );
+
+
+    if(!match)
+        return "";
+
+
+    const temp =
+        document.createElement("div");
+
+
+    temp.innerHTML =
+        match[1];
+
+
+    return temp.textContent
+        .replace(/\s+/g," ")
+        .trim()
+        .substring(0,50);
+
+}
+
+
+/* =========================================================
+DATA
+========================================================= */
+
+function getDate(){
+
+    const now =
+        new Date();
+
+    return (
+        now.toLocaleDateString(
+            "pt-BR"
+        )
+        +
+        " • "
+        +
+        now.toLocaleTimeString(
+            "pt-BR",
+            {
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        )
+    );
+
+}
+
+
+/* =========================================================
+ÍCONE AUTOMÁTICO
+========================================================= */
+
+function chooseIcon(name){
+
+    const n =
+        String(name || "")
+            .toLowerCase();
+
+
+    if(
+        n.includes("slot") ||
+        n.includes("caça") ||
+        n.includes("caca")
+    )
+        return "🎰";
+
+
+    if(
+        n.includes("paint") ||
+        n.includes("desenho") ||
+        n.includes("pint")
+    )
+        return "🎨";
+
+
+    if(
+        n.includes("nave") ||
+        n.includes("navinha") ||
+        n.includes("space")
+    )
+        return "🚀";
+
+
+    if(
+        n.includes("memória") ||
+        n.includes("memoria")
+    )
+        return "🧠";
+
+
+    if(
+        n.includes("raspad") ||
+        n.includes("scratch")
+    )
+        return "🎫";
+
+
+    if(
+        n.includes("domin")
+    )
+        return "🀄";
+
+
+    if(
+        n.includes("chat")
+    )
+        return "💬";
+
+
+    if(
+        n.includes("runner")
+    )
+        return "🏃";
+
+
+    if(
+        n.includes("jogo")
+    )
+        return "🎮";
+
+
+    return "🎮";
+
+}
+
+
+/* =========================================================
+JOGAR
+========================================================= */
+
+function playGame(id){
+
+    const game =
+        games.find(
+            item => item.id === id
+        );
+
+
+    if(!game){
+
+        alert(
+            "Jogo não encontrado."
+        );
+
+        return;
+
+    }
+
+
+    gameRunningName.textContent =
+        game.name;
+
+
+    gameScreen.classList.add(
+        "active"
+    );
+
+
+    status.textContent =
+        "JOGANDO";
+
+
+    gameFrame.srcdoc = "";
+
+
+    setTimeout(
+        () => {
+
+            gameFrame.srcdoc =
+                game.code;
+
+        },
+        100
+    );
+
+}
+
+
+/* =========================================================
+FECHAR JOGO
+========================================================= */
+
+function closeGame(){
+
+    gameFrame.srcdoc = "";
+
+    gameScreen.classList.remove(
+        "active"
+    );
+
+    status.textContent =
+        "PRONTO";
+
+
+    if(document.fullscreenElement){
+
+        document
+            .exitFullscreen()
+            .catch(
+                () => {}
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+TELA CHEIA
+========================================================= */
+
+function toggleFullscreen(){
+
+    if(
+        !document.fullscreenElement
+    ){
+
+        if(
+            gameScreen.requestFullscreen
+        ){
+
+            gameScreen
+                .requestFullscreen()
+                .catch(
+                    () => {}
+                );
+
+        }
+
+    }else{
+
+        if(
+            document.exitFullscreen
+        ){
+
+            document
+                .exitFullscreen()
+                .catch(
+                    () => {}
+                );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+EXCLUIR
+========================================================= */
+
+function askDelete(id){
+
+    const game =
+        games.find(
+            item => item.id === id
+        );
+
+
+    if(!game)
+        return;
+
+
+    deletingId =
+        id;
+
+
+    deleteText.textContent =
+        'O jogo "' +
+        game.name +
+        '" será removido da biblioteca.';
+
+
+    deleteModal.classList.add(
+        "active"
+    );
+
+}
+
+
+function closeDeleteModal(){
+
+    deletingId = null;
+
+    deleteModal.classList.remove(
+        "active"
+    );
+
+}
+
+
+function confirmDelete(){
+
+    if(!deletingId)
+        return;
+
+
+    games =
+        games.filter(
+            item =>
+                item.id !== deletingId
+        );
+
+
+    saveLibrary();
+
+    closeDeleteModal();
+
+    renderGames();
+
+    showToast(
+        "🗑️ Jogo excluído"
+    );
+
+}
+
+
+/* =========================================================
+CRIADOR
+========================================================= */
+
+function openCreatorInfo(){
+
+    creatorModal.classList.add(
+        "active"
+    );
+
+}
+
+
+function closeCreatorInfo(){
+
+    creatorModal.classList.remove(
+        "active"
+    );
+
+}
+
+
+/* =========================================================
+LIMPAR EDITOR
+========================================================= */
+
+function clearEditor(){
+
+    if(
+        gameName.value.trim() ||
+        code.value.trim()
+    ){
+
+        if(
+            !confirm(
+                "Deseja apagar o conteúdo do editor?"
+            )
+        )
+            return;
+
+    }
+
+
+    gameName.value = "";
+
+    code.value = "";
+
+    updateCounter();
+
+}
+
+
+/* =========================================================
+CONTADOR
+========================================================= */
+
+function updateCounter(){
+
+    charCount.textContent =
+        code.value.length
+        .toLocaleString("pt-BR")
+        +
+        " caracteres";
+
+}
+
+
+/* =========================================================
+EXEMPLO
+========================================================= */
+
+function loadExample(){
+
+    gameName.value =
+        "MAEL66 TESTE";
+
+
+    code.value = `<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>MAEL66 TESTE</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+html,
+body{
+margin:0;
+width:100%;
+height:100%;
+overflow:hidden;
+font-family:Arial;
+background:#020403;
+color:#fff;
+}
+
+body{
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.box{
+width:90%;
+max-width:400px;
+padding:35px 20px;
+text-align:center;
+border-radius:25px;
+border:2px solid #00ff40;
+box-shadow:
+0 0 25px #00ff40;
+background:#061008;
+}
+
+h1{
+color:#65ff73;
+}
+
+button{
+padding:15px 25px;
+border:0;
+border-radius:12px;
+font-weight:bold;
+background:#00ff40;
+color:#001000;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>🎮 MAEL66</h1>
+
+<p>HTML RUNNER FUNCIONANDO!</p>
+
+<button onclick="alert('Funcionou!')">
+CLIQUE AQUI
+</button>
+
+</div>
+
+</body>
+
+</html>`;
+
+
+    updateCounter();
+
+    status.textContent =
+        "EXEMPLO";
+
+}
+
+
+/* =========================================================
+TOAST
+========================================================= */
+
+function showToast(message){
+
+    toast.textContent =
+        message;
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            2200
+        );
+
+}
+
+
+/* =========================================================
+EVENTOS
+========================================================= */
+
+code.addEventListener(
+    "input",
+    () => {
+
+        updateCounter();
+
+        status.textContent =
+            "EDITANDO";
+
+    }
+);
+
+
+gameName.addEventListener(
+    "input",
+    () => {
+
+        status.textContent =
+            "EDITANDO";
+
+    }
+);
+
+
+gameName.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.key === "Enter"
+        ){
+
+            code.focus();
+
+        }
+
+    }
+);
+
+
+searchInput.addEventListener(
+    "input",
+    renderGames
+);
+
+
+deleteModal.addEventListener(
+    "click",
+    event => {
+
+        if(
+            event.target ===
+            deleteModal
+        ){
+
+            closeDeleteModal();
+
+        }
+
+    }
+);
+
+
+creatorModal.addEventListener(
+    "click",
+    event => {
+
+        if(
+            event.target ===
+            creatorModal
+        ){
+
+            closeCreatorInfo();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+ESC
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.key !== "Escape"
+        )
+            return;
+
+
+        if(
+            creatorModal.classList.contains(
+                "active"
+            )
+        ){
+
+            closeCreatorInfo();
+
+            return;
+
+        }
+
+
+        if(
+            deleteModal.classList.contains(
+                "active"
+            )
+        ){
+
+            closeDeleteModal();
+
+            return;
+
+        }
+
+
+        if(
+            gameScreen.classList.contains(
+                "active"
+            )
+        ){
+
+            closeGame();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+LOADING
+========================================================= */
+
+const loadingDuration =
+    3000;
+
+const loadingStart =
+    Date.now();
+
+
+function updateLoading(){
+
+    const elapsed =
+        Date.now() -
+        loadingStart;
+
+
+    const percent =
+        Math.min(
+            100,
+            Math.floor(
+                (elapsed /
+                loadingDuration) *
+                100
+            )
+        );
+
+
+    loadingPercent.textContent =
+        percent + "%";
+
+
+    loadingBar.style.width =
+        percent + "%";
+
+
+    if(
+        elapsed <
+        loadingDuration
+    ){
+
+        requestAnimationFrame(
+            updateLoading
+        );
+
+    }
+
+}
+
+
+requestAnimationFrame(
+    updateLoading
+);
+
+
+/* =========================================================
+INICIALIZAÇÃO
+========================================================= */
+
+loadGames();
+
+
+setTimeout(
+    () => {
+
+        loadingScreen.classList.add(
+            "hide"
+        );
+
+    },
+    loadingDuration
+);
+
+</script>
+
+</body>
+
+</html>
